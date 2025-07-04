@@ -216,5 +216,26 @@ function runRouting() {
     document.getElementById('info').textContent = 'لم يتم العثور على مسار مناسب.';
   }
 }
+document.getElementById("locateBtn").addEventListener("click", () => {
+  navigator.geolocation.getCurrentPosition(pos => {
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+
+    // إزالة أي علامة سابقة للموقع
+    if (window.userMarker) {
+      map.removeLayer(window.userMarker);
+    }
+
+    // إضافة علامة الموقع الحالية
+    window.userMarker = L.circleMarker([userLat, userLng], {
+      radius: 8,
+      color: '#28a745',
+      fillColor: '#28a745',
+      fillOpacity: 0.9
+    }).addTo(map).bindPopup("📍 أنت هنا").openPopup();
+
+    runRouting(); // إعادة حساب المسار بعد تحديث الموقع
+  });
+});
 
 loadMap();

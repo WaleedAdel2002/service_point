@@ -31,3 +31,17 @@ body {
   padding: 10px;
   font-size: 1rem;
 }
+#locateBtn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin: 10px 0;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+#locateBtn:hover {
+  background-color: #0056b3;
+}
