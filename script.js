@@ -263,4 +263,18 @@ function getRoadColor(fclass) {
   }
 }
 
+// تحميل حدود المنطقة
+fetch('data/border.json')
+  .then(res => res.json())
+  .then(boundaryData => {
+    const boundaryLayer = L.geoJSON(boundaryData, {
+      style: {
+        color: 'black',
+        weight: 2,
+        fillColor: '#f2f2f2',
+        fillOpacity: 0.2
+      }
+    }).addTo(map);
+
+
 loadMap();
