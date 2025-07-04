@@ -92,7 +92,7 @@ async function loadMap() {
 fetch('data/border.json')
   .then(res => res.json())
   .then(borderData => {
-    const borderLayer = L.geoJSON(boundaryData, {
+    const borderLayer = L.geoJSON(borderData, {
       style: {
         color: 'black',
         weight: 2,
@@ -100,10 +100,11 @@ fetch('data/border.json')
         fillOpacity: 0.1
       },
       onEachFeature: function (feature, layer) {
-        if (feature.properties?.name) {
-          layer.bindPopup(`المنطقة: ${feature.properties.name}`);
-        }
-      }
+      const props = feature.properties;
+      const popupText = props.Section_A_ || props.Dist_A_Nam || props.Gov_A_Name || `معرف: ${props.OBJECTID}`;
+      layer.bindPopup(`المنطقة: ${popupText}`);
+     }
+
     }).addTo(map);
 
     // يمكنك عمل زوم تلقائي على الحدود
