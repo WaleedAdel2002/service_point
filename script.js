@@ -9,6 +9,23 @@ let map, userLat, userLng;
 let roadsLayer = L.layerGroup();
 let routeLayer = L.layerGroup();
 
+let userMarker = null;
+let destinationMarker = null;
+
+const greenIcon = L.icon({
+  iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
+const redIcon = L.icon({
+  iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-red.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+});
+
 function formatTime(minutes) {
   const totalSeconds = Math.round(minutes * 60);
   const hours = Math.floor(totalSeconds / 3600);
@@ -124,8 +141,11 @@ async function loadMap() {
   navigator.geolocation.getCurrentPosition(pos => {
     userLat = pos.coords.latitude;
     userLng = pos.coords.longitude;
-    L.marker([userLat, userLng], { color: 'green' }).addTo(map).bindPopup("أنت هنا").openPopup();
-    runRouting(); 
+
+    if (userMarker) map.removeLayer(userMarker);
+    userMarker = L.marker([userLat, userLng], { icon: greenIcon }).addTo(map).bindPopup("📍 أنت هنا").openPopup();
+
+    runRouting();
   });
 
   typeSelect.addEventListener("change", runRouting);
@@ -163,10 +183,17 @@ function runRouting() {
 
   routeLayer.clearLayers();
 
+  if (destinationMarker) map.removeLayer(destinationMarker);
+
   if (best.path.length > 0) {
     const latlngs = best.path.map(str => str.split(',').reverse().map(Number));
     L.polyline(latlngs, { color: 'blue' }).addTo(routeLayer);
     map.fitBounds(latlngs);
+
+    destinationMarker = L.marker(best.service.coord, { icon: redIcon })
+      .addTo(map)
+      .bindPopup(`📌 ${best.service.name}`)
+      .openPopup();
 
     let stepsHtml = "<hr><b>تفاصيل المسار:</b><br>";
     for (let i = 0; i < best.path.length - 1; i++) {
