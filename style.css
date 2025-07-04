@@ -2,8 +2,42 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   display: flex;
+  flex-direction: column; /* لتوجيه العناصر رأسيًا: الرأس ثم المحتوى الرئيسي */
   height: 100vh;
   direction: rtl;
+}
+
+header {
+  display: flex;
+  justify-content: space-between; /* لتوزيع اللوجو والعنوان بالتساوي */
+  align-items: center; /* لمحاذاة العناصر عموديًا في المنتصف */
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  height: 50px; /* ارتفاع الرأس */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1000; /* للتأكد من ظهور الرأس فوق الخريطة */
+}
+
+.header-logo {
+  height: 40px; /* حجم اللوجو */
+  width: auto;
+}
+
+.header-title {
+  flex-grow: 1; /* للسماح للعنوان بأخذ المساحة المتبقية */
+  text-align: center; /* لتوسيط العنوان */
+}
+
+.header-title h1 {
+  margin: 0;
+  font-size: 1.8rem; /* حجم خط العنوان */
+  color: #fff;
+}
+
+.main-content {
+  display: flex;
+  flex-grow: 1; /* للسماح للمحتوى الرئيسي بأخذ المساحة المتبقية */
 }
 
 #sidebar {
@@ -12,11 +46,12 @@ body {
   background-color: #f1f1f1;
   overflow-y: auto;
   box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  height: calc(100vh - 70px); /* ارتفاع الشريط الجانبي بعد خصم ارتفاع الرأس */
 }
 
 #map {
   width: 80%;
-  height: 100vh;
+  height: calc(100vh - 70px); /* ارتفاع الخريطة بعد خصم ارتفاع الرأس */
 }
 
 #filter-container {
@@ -51,7 +86,6 @@ body {
 #info th {
   background-color: #f2f2f2;
 }
-
 
 #locateBtn {
   background-color: #007bff;
@@ -94,4 +128,73 @@ body {
 
 .control-item input[type="checkbox"] {
   margin-left: 5px;
+}
+
+/* تنسيق الأيقونة */
+.designer-info {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 1000;
+}
+
+.designer-info:hover {
+    background-color: #555;
+}
+
+/* تنسيق النافذة المنبثقة */
+.popup {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 200px;
+    text-align: center;
+    z-index: 1000;
+}
+
+.popup img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.popup h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.popup p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* خلفية شبه شفافة عند ظهور النافذة */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }

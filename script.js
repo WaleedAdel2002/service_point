@@ -67,6 +67,25 @@ function findClosestNode(x, y, nodes) {
   return closest;
 }
 
+
+
+
+    // وظيفة لإظهار أو إخفاء النافذة المنبثقة
+    function togglePopup() {
+        const popup = document.getElementById("info-popup");
+        const overlay = document.getElementById("info-overlay");
+        if (popup.style.display === "block") {
+            popup.style.display = "none";
+            overlay.style.display = "none";
+        } else {
+            popup.style.display = "block";
+            overlay.style.display = "block";
+        }
+    }
+
+
+
+
 // دالة للحصول على اتجاه النص
 function getDirectionText(from, to) {
   const dx = to[0] - from[0];
@@ -101,13 +120,33 @@ function displayFeatureInfo(properties, title = "معلومات الميزة") {
 
 async function loadMap() {
   map = L.map('map').setView([26.09, 32.43], 12);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  // تعريف طبقات الخرائط الأساسية
+  const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  });
+
+  const esriWorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  });
+
+  // إضافة الطبقة الافتراضية عند التحميل
+  osmLayer.addTo(map);
 
   // إضافة جميع طبقات Group إلى الخريطة
   roadsLayer.addTo(map);
   servicePointsLayer.addTo(map);
   routeLayer.addTo(map);
   borderLayer.addTo(map);
+
+  // إضافة عنصر التحكم في الطبقات الأساسية
+  const baseMaps = {
+    "خريطة الشارع": osmLayer,
+    "صور جوية": esriWorldImagery
+  };
+
+  L.control.layers(baseMaps).addTo(map);
+
 
   const [roadsData, servicesData, borderData] = await Promise.all([ // تحميل بيانات الحدود
     fetch(roadsPath).then(res => res.json()),
