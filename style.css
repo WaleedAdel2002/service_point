@@ -1,4 +1,3 @@
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -24,13 +23,36 @@ body {
   margin-bottom: 20px;
   background-color: #e9ecef;
   padding: 10px;
+  border-radius: 5px;
 }
 
 #info {
   background-color: #f8f9fa;
   padding: 10px;
   font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #dee2e6;
 }
+
+/* أنماط الجدول داخل #info */
+#info table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 0.85rem; /* حجم الخط أصغر */
+}
+
+#info th, #info td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: right;
+}
+
+#info th {
+  background-color: #f2f2f2;
+}
+
+
 #locateBtn {
   background-color: #007bff;
   color: white;
@@ -42,6 +64,34 @@ body {
   cursor: pointer;
   width: 100%;
 }
+
 #locateBtn:hover {
   background-color: #0056b3;
+}
+
+#map-controls {
+  margin-top: 20px;
+  background-color: #e9ecef;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+#map-controls h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.control-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.control-item {
+  margin-bottom: 8px;
+}
+
+.control-item input[type="checkbox"] {
+  margin-left: 5px;
 }

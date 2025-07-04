@@ -8,7 +8,7 @@
 </head>
 <body>
   <div id="sidebar">
-<button id="locateBtn">📍 موقعي</button>
+    <button id="locateBtn">📍 موقعي</button>
 
     <div id="filter-container">
       <label for="typeFilter">اختر نوع الخدمة:</label>
@@ -16,6 +16,29 @@
         <option value="all">الكل</option>
       </select>
     </div>
+
+    <div id="map-controls">
+      <h4>التحكم بالطبقات</h4>
+      <div class="control-section">
+        <div class="control-item">
+          <input type="checkbox" id="toggleRoads" checked>
+          <label for="toggleRoads">الطرق</label>
+        </div>
+        <div class="control-item">
+          <input type="checkbox" id="toggleServicePoints" checked>
+          <label for="toggleServicePoints">نقاط الخدمة</label>
+        </div>
+        <div class="control-item">
+          <input type="checkbox" id="toggleRoute" checked>
+          <label for="toggleRoute">المسار</label>
+        </div>
+        <div class="control-item">
+          <input type="checkbox" id="toggleBorder" checked>
+          <label for="toggleBorder">الحدود</label>
+        </div>
+      </div>
+    </div>
+
     <div id="info">جارٍ تحميل الخريطة...</div>
   </div>
 

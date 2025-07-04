@@ -1,17 +1,22 @@
 const roadsPath = 'data/roads.json';
 const servicesPath = 'data/point.json';
+const borderPath = 'data/border.json'; // إضافة مسار ملف الحدود
 
 let graph = {};
 let edgeLengths = {};
 let servicePoints = [];
 let map, userLat, userLng;
 
+// تعريف طبقات Leaflet
 let roadsLayer = L.layerGroup();
+let servicePointsLayer = L.layerGroup(); // طبقة لنقاط الخدمة
 let routeLayer = L.layerGroup();
+let borderLayer = L.layerGroup(); // طبقة للحدود
 
 let userMarker = null;
 let destinationMarker = null;
 
+// أيقونات مخصصة
 const greenIcon = L.icon({
   iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
   iconSize: [25, 41],
@@ -26,6 +31,7 @@ const redIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
+// دوال لتنسيق الوقت والمسافة
 function formatTime(minutes) {
   const totalSeconds = Math.round(minutes * 60);
   const hours = Math.floor(totalSeconds / 3600);
@@ -61,6 +67,7 @@ function findClosestNode(x, y, nodes) {
   return closest;
 }
 
+// دالة للحصول على اتجاه النص
 function getDirectionText(from, to) {
   const dx = to[0] - from[0];
   const dy = to[1] - from[1];
@@ -76,43 +83,52 @@ function getDirectionText(from, to) {
   return "";
 }
 
+// دالة لعرض معلومات الميزة في الشريط الجانبي في شكل جدول
+function displayFeatureInfo(properties, title = "معلومات الميزة") {
+  let infoHtml = `<h4>${title}</h4>`;
+  infoHtml += '<table>';
+  infoHtml += '<thead><tr><th>الخاصية</th><th>القيمة</th></tr></thead>';
+  infoHtml += '<tbody>';
+  for (const key in properties) {
+    // تخطي الخصائص غير المرغوب فيها أو الفارغة
+    if (properties.hasOwnProperty(key) && properties[key] !== null && properties[key] !== "" && key !== "FID") {
+      infoHtml += `<tr><td><b>${key}</b></td><td>${properties[key]}</td></tr>`;
+    }
+  }
+  infoHtml += '</tbody></table>';
+  document.getElementById('info').innerHTML = infoHtml;
+}
+
 async function loadMap() {
   map = L.map('map').setView([26.09, 32.43], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
+  // إضافة جميع طبقات Group إلى الخريطة
   roadsLayer.addTo(map);
+  servicePointsLayer.addTo(map);
   routeLayer.addTo(map);
+  borderLayer.addTo(map);
 
-  const [roadsData, servicesData] = await Promise.all([
+  const [roadsData, servicesData, borderData] = await Promise.all([ // تحميل بيانات الحدود
     fetch(roadsPath).then(res => res.json()),
-    fetch(servicesPath).then(res => res.json())
+    fetch(servicesPath).then(res => res.json()),
+    fetch(borderPath).then(res => res.json()) // جلب بيانات الحدود
   ]);
 
-
-
-fetch('data/border.json')
-  .then(res => res.json())
-  .then(borderData => {
-    const borderLayer = L.geoJSON(borderData, {
-      style: {
-        color: 'purple',
-        weight: 4
-      },
-      onEachFeature: function (feature, layer) {
-        const name = feature.properties?.name || 'خط بدون اسم';
-        layer.bindPopup(name);
-      }
-    }).addTo(map);
-
-    // لتكبير الخريطة على الخطوط
-    map.fitBounds(borderLayer.getBounds());
-  })
-  .catch(err => console.error("❌ خطأ في تحميل طبقة الخطوط:", err));
-
-
-
-
-
+  // معالجة بيانات الحدود
+  L.geoJSON(borderData, {
+    style: {
+      color: 'purple',
+      weight: 4
+    },
+    onEachFeature: function (feature, layer) {
+      const name = feature.properties?.name || 'خط بدون اسم';
+      layer.bindPopup(name);
+      layer.on('click', function() {
+        displayFeatureInfo(feature.properties || feature.attributes, `معلومات الحدود: ${name}`);
+      });
+    }
+  }).addTo(borderLayer);
 
 
   roadsData.features.forEach(f => {
@@ -127,11 +143,15 @@ fetch('data/border.json')
     const fclass = props.fclass || 'unknown';
     const roadColor = getRoadColor(fclass);
 
-    L.polyline(coords.map(c => [c[1], c[0]]), {
+    const roadPolyline = L.polyline(coords.map(c => [c[1], c[0]]), {
       color: roadColor,
       weight: 3,
       opacity: 0.8
-    }).addTo(roadsLayer);
+    });
+    roadPolyline.addTo(roadsLayer);
+    roadPolyline.on('click', function() {
+      displayFeatureInfo(props, `معلومات الطريق: ${props.name || props.fclass || 'غير معروف'}`);
+    });
 
 
     for (let i = 0; i < segments; i++) {
@@ -148,7 +168,7 @@ fetch('data/border.json')
   });
 
   const typesSet = new Set();
-  servicesData.features.forEach(f => {
+  servicePoints = servicesData.features.map(f => {
     let coord;
     if (f.geometry.coordinates) {
       coord = f.geometry.coordinates;
@@ -161,8 +181,11 @@ fetch('data/border.json')
     const latlng = [coord[1], coord[0]];
     typesSet.add(type);
 
-    servicePoints.push({ coord: latlng, name, type });
-    f._marker = L.marker(latlng).addTo(map).bindPopup(name);
+    const marker = L.marker(latlng).bindPopup(name);
+    marker.on('click', function() {
+      displayFeatureInfo(props, `معلومات الخدمة: ${name}`);
+    });
+    return { coord: latlng, name, type, marker: marker }; // تخزين العلامة مع نقطة الخدمة
   });
 
   const typeSelect = document.getElementById("typeFilter");
@@ -184,6 +207,44 @@ fetch('data/border.json')
   });
 
   typeSelect.addEventListener("change", runRouting);
+
+  // إعداد عناصر التحكم في الطبقات
+  setupLayerControls();
+}
+
+// دالة لإعداد عناصر التحكم في الطبقات
+function setupLayerControls() {
+  document.getElementById('toggleRoads').addEventListener('change', function() {
+    if (this.checked) {
+      map.addLayer(roadsLayer);
+    } else {
+      map.removeLayer(roadsLayer);
+    }
+  });
+
+  document.getElementById('toggleServicePoints').addEventListener('change', function() {
+    if (this.checked) {
+      map.addLayer(servicePointsLayer);
+    } else {
+      map.removeLayer(servicePointsLayer);
+    }
+  });
+
+  document.getElementById('toggleRoute').addEventListener('change', function() {
+    if (this.checked) {
+      map.addLayer(routeLayer);
+    } else {
+      map.removeLayer(routeLayer);
+    }
+  });
+
+  document.getElementById('toggleBorder').addEventListener('change', function() {
+    if (this.checked) {
+      map.addLayer(borderLayer);
+    } else {
+      map.removeLayer(borderLayer);
+    }
+  });
 }
 
 function runRouting() {
@@ -193,6 +254,16 @@ function runRouting() {
   const userNode = findClosestNode(userLng, userLat, Object.keys(graph));
 
   let best = { dist: Infinity, length: 0, service: null, path: [] };
+
+  // إخفاء جميع نقاط الخدمة أولاً
+  servicePointsLayer.clearLayers();
+
+  // تصفية وعرض نقاط الخدمة ذات الصلة فقط
+  servicePoints.forEach(s => {
+    if (selectedType === "all" || s.type === selectedType) {
+      s.marker.addTo(servicePointsLayer); // أعد إضافة العلامة إلى الطبقة المرئية
+    }
+  });
 
   servicePoints.forEach(s => {
     if (selectedType !== "all" && s.type !== selectedType) return;
@@ -223,7 +294,7 @@ function runRouting() {
   if (best.path.length > 0) {
     const latlngs = best.path.map(str => str.split(',').reverse().map(Number));
     L.polyline(latlngs, { color: 'blue' }).addTo(routeLayer);
-    map.fitBounds(latlngs);
+    map.fitBounds(latlngs, { padding: [50, 50] }); // إضافة بعض الحشوة
 
     destinationMarker = L.marker(best.service.coord, { icon: redIcon })
       .addTo(map)
@@ -236,7 +307,8 @@ function runRouting() {
       const to = best.path[i + 1].split(',').map(Number).reverse();
       const direction = getDirectionText(from, to);
       const dist = edgeLengths[`${best.path[i]}_${best.path[i + 1]}`] || 0;
-      stepsHtml += `➡️ ${direction} لمسافة <b>${formatDistance(dist)}</b><br>`;
+      const timeSegment = graph[best.path[i]][best.path[i+1]] || 0;
+      stepsHtml += `➡️ ${direction} لمسافة <b>${formatDistance(dist)}</b> في <b>${formatTime(timeSegment)}</b><br>`;
     }
     stepsHtml += `✅ الوصول إلى: <b>${best.service.name}</b>`;
 
@@ -251,27 +323,26 @@ function runRouting() {
     document.getElementById('info').textContent = 'لم يتم العثور على مسار مناسب.';
   }
 }
+
 document.getElementById("locateBtn").addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(pos => {
     userLat = pos.coords.latitude;
     userLng = pos.coords.longitude;
 
-    // إزالة أي علامة سابقة للموقع
-    if (window.userMarker) {
-      map.removeLayer(window.userMarker);
+    if (userMarker) {
+      map.removeLayer(userMarker);
     }
 
-    // إضافة علامة الموقع الحالية
-    window.userMarker = L.circleMarker([userLat, userLng], {
-      radius: 8,
-      color: '#28a745',
-      fillColor: '#28a745',
-      fillOpacity: 0.9
-    }).addTo(map).bindPopup("📍 أنت هنا").openPopup();
+    userMarker = L.marker([userLat, userLng], { icon: greenIcon })
+      .addTo(map)
+      .bindPopup("📍 أنت هنا")
+      .openPopup();
 
-    runRouting(); // إعادة حساب المسار بعد تحديث الموقع
+    map.setView([userLat, userLng], 15); // تكبير وعرض موقع المستخدم
+    runRouting();
   });
 });
+
 function getRoadColor(fclass) {
   switch (fclass) {
     case 'motorway':
@@ -289,6 +360,5 @@ function getRoadColor(fclass) {
       return 'gray'; // اللون الافتراضي
   }
 }
-
 
 loadMap();
