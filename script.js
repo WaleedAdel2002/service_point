@@ -166,6 +166,7 @@ function runRouting() {
   if (best.path.length > 0) {
     const latlngs = best.path.map(str => str.split(',').reverse().map(Number));
     L.polyline(latlngs, { color: 'blue' }).addTo(routeLayer);
+    map.fitBounds(latlngs);
 
     let stepsHtml = "<hr><b>تفاصيل المسار:</b><br>";
     for (let i = 0; i < best.path.length - 1; i++) {
