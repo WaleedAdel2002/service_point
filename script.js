@@ -97,7 +97,15 @@ async function loadMap() {
     const perSegmentTime = totalTime / segments;
     const perSegmentLength = totalLength / segments;
 
-    L.polyline(coords.map(c => [c[1], c[0]]), { color: 'gray', weight: 2 }).addTo(roadsLayer);
+    const fclass = props.fclass || 'unknown';
+    const roadColor = getRoadColor(fclass);
+
+    L.polyline(coords.map(c => [c[1], c[0]]), {
+      color: roadColor,
+      weight: 3,
+      opacity: 0.8
+    }).addTo(roadsLayer);
+
 
     for (let i = 0; i < segments; i++) {
       const a = coords[i], b = coords[i + 1];
@@ -237,5 +245,22 @@ document.getElementById("locateBtn").addEventListener("click", () => {
     runRouting(); // إعادة حساب المسار بعد تحديث الموقع
   });
 });
+function getRoadColor(fclass) {
+  switch (fclass) {
+    case 'motorway':
+    case 'highway':
+      return '#ff4d4d'; // أحمر للطرق السريعة
+    case 'primary':
+      return '#ffa500'; // برتقالي للطرق الرئيسية
+    case 'secondary':
+      return '#28a745'; // أخضر للطرق الثانوية
+    case 'residential':
+      return '#007bff'; // أزرق للمناطق السكنية
+    case 'track':
+      return '#8e44ad'; // بنفسجي للطرق الترابية
+    default:
+      return 'gray'; // اللون الافتراضي
+  }
+}
 
 loadMap();
