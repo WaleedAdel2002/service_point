@@ -2,6 +2,10 @@ const roadsPath = 'data/roads.json';
 const servicesPath = 'data/point.json';
 
 let graph = {};
+let edgeLengths = {};
+let servicePoints = [];
+let map, userLat, userLng;
+
 function formatTime(minutes) {
   const totalSeconds = Math.round(minutes * 60);
   const hours = Math.floor(totalSeconds / 3600);
@@ -13,6 +17,7 @@ function formatTime(minutes) {
   if (seconds > 0) parts.push(`${seconds} ثانية`);
   return parts.join(" و ");
 }
+
 function formatDistance(km) {
   const meters = Math.round(km * 1000);
   const kmPart = Math.floor(meters / 1000);
@@ -22,9 +27,6 @@ function formatDistance(km) {
   if (mPart > 0) parts.push(`${mPart} متر`);
   return parts.join(" و ");
 }
-let edgeLengths = {};
-let servicePoints = [];
-let map, userLat, userLng;
 
 function findClosestNode(x, y, nodes) {
   let minDist = Infinity, closest = null;
@@ -168,8 +170,8 @@ function runRouting() {
       const from = best.path[i].split(',').map(Number).reverse();
       const to = best.path[i + 1].split(',').map(Number).reverse();
       const direction = getDirectionText(from, to);
-      const dist = (edgeLengths[`${best.path[i]}_${best.path[i + 1]}`] || 0).toFixed(2);
-      stepsHtml += `➡️ ${direction} لمسافة <b>${dist} كم</b><br>`;
+      const dist = edgeLengths[`${best.path[i]}_${best.path[i + 1]}`] || 0;
+      stepsHtml += `➡️ ${direction} لمسافة <b>${formatDistance(dist)}</b><br>`;
     }
     stepsHtml += `✅ الوصول إلى: <b>${best.service.name}</b>`;
 
