@@ -88,29 +88,32 @@ async function loadMap() {
     fetch(servicesPath).then(res => res.json())
   ]);
 
-// تحميل الحدود (border layer)
+
+
 fetch('data/border.json')
   .then(res => res.json())
   .then(borderData => {
     const borderLayer = L.geoJSON(borderData, {
       style: {
-        color: 'black',
-        weight: 2,
-        fillColor: '#f2f2f2',
-        fillOpacity: 0.1
+        color: 'purple',
+        weight: 4
       },
       onEachFeature: function (feature, layer) {
-      const props = feature.properties;
-      const popupText = props.Section_A_ || props.Dist_A_Nam || props.Gov_A_Name || `معرف: ${props.OBJECTID}`;
-      layer.bindPopup(`المنطقة: ${popupText}`);
-     }
-
+        const name = feature.properties?.name || 'خط بدون اسم';
+        layer.bindPopup(name);
+      }
     }).addTo(map);
 
-    // يمكنك عمل زوم تلقائي على الحدود
+    // لتكبير الخريطة على الخطوط
     map.fitBounds(borderLayer.getBounds());
   })
-  .catch(err => console.error("❌ خطأ في تحميل حدود المنطقة:", err));
+  .catch(err => console.error("❌ خطأ في تحميل طبقة الخطوط:", err));
+
+
+
+
+
+
 
   roadsData.features.forEach(f => {
     const coords = f.geometry.paths?.[0] || f.geometry.coordinates;
