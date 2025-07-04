@@ -2,6 +2,26 @@ const roadsPath = 'data/roads.json';
 const servicesPath = 'data/point.json';
 
 let graph = {};
+function formatTime(minutes) {
+  const totalSeconds = Math.round(minutes * 60);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutesPart = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  let parts = [];
+  if (hours > 0) parts.push(`${hours} ساعة`);
+  if (minutesPart > 0) parts.push(`${minutesPart} دقيقة`);
+  if (seconds > 0) parts.push(`${seconds} ثانية`);
+  return parts.join(" و ");
+}
+function formatDistance(km) {
+  const meters = Math.round(km * 1000);
+  const kmPart = Math.floor(meters / 1000);
+  const mPart = meters % 1000;
+  let parts = [];
+  if (kmPart > 0) parts.push(`${kmPart} كم`);
+  if (mPart > 0) parts.push(`${mPart} متر`);
+  return parts.join(" و ");
+}
 let edgeLengths = {};
 let servicePoints = [];
 let map, userLat, userLng;
@@ -156,8 +176,8 @@ function runRouting() {
     document.getElementById('info').innerHTML = `
       أقرب نقطة: <b>${best.service.name}</b><br>
       نوع الخدمة: <b>${best.service.type}</b><br>
-      زمن الوصول التقريبي: <b>${best.dist.toFixed(2)} دقيقة</b><br>
-      المسافة التقريبية: <b>${best.length.toFixed(2)} كم</b><br>
+      زمن الوصول التقريبي: <b>${formatTime(best.dist)}</b><br>
+      المسافة التقريبية: <b>${formatDistance(best.length)}</b><br>
       ${stepsHtml}
     `;
   } else {
