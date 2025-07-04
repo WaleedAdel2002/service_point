@@ -6,6 +6,9 @@ let edgeLengths = {};
 let servicePoints = [];
 let map, userLat, userLng;
 
+let roadsLayer = L.layerGroup();
+let routeLayer = L.layerGroup();
+
 function formatTime(minutes) {
   const totalSeconds = Math.round(minutes * 60);
   const hours = Math.floor(totalSeconds / 3600);
@@ -60,6 +63,9 @@ async function loadMap() {
   map = L.map('map').setView([26.09, 32.43], 12);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
+  roadsLayer.addTo(map);
+  routeLayer.addTo(map);
+
   const [roadsData, servicesData] = await Promise.all([
     fetch(roadsPath).then(res => res.json()),
     fetch(servicesPath).then(res => res.json())
@@ -74,7 +80,7 @@ async function loadMap() {
     const perSegmentTime = totalTime / segments;
     const perSegmentLength = totalLength / segments;
 
-    L.polyline(coords.map(c => [c[1], c[0]]), { color: 'gray', weight: 2 }).addTo(map);
+    L.polyline(coords.map(c => [c[1], c[0]]), { color: 'gray', weight: 2 }).addTo(roadsLayer);
 
     for (let i = 0; i < segments; i++) {
       const a = coords[i], b = coords[i + 1];
@@ -155,15 +161,11 @@ function runRouting() {
     }
   });
 
-  map.eachLayer(layer => {
-    if (layer instanceof L.Polyline && !(layer instanceof L.TileLayer)) {
-      map.removeLayer(layer);
-    }
-  });
+  routeLayer.clearLayers();
 
   if (best.path.length > 0) {
     const latlngs = best.path.map(str => str.split(',').reverse().map(Number));
-    L.polyline(latlngs, { color: 'blue' }).addTo(map);
+    L.polyline(latlngs, { color: 'blue' }).addTo(routeLayer);
 
     let stepsHtml = "<hr><b>تفاصيل المسار:</b><br>";
     for (let i = 0; i < best.path.length - 1; i++) {
