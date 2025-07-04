@@ -88,6 +88,29 @@ async function loadMap() {
     fetch(servicesPath).then(res => res.json())
   ]);
 
+// تحميل الحدود (border layer)
+fetch('data/border.json')
+  .then(res => res.json())
+  .then(borderData => {
+    const borderLayer = L.geoJSON(boundaryData, {
+      style: {
+        color: 'black',
+        weight: 2,
+        fillColor: '#f2f2f2',
+        fillOpacity: 0.1
+      },
+      onEachFeature: function (feature, layer) {
+        if (feature.properties?.name) {
+          layer.bindPopup(`المنطقة: ${feature.properties.name}`);
+        }
+      }
+    }).addTo(map);
+
+    // يمكنك عمل زوم تلقائي على الحدود
+    map.fitBounds(borderLayer.getBounds());
+  })
+  .catch(err => console.error("❌ خطأ في تحميل حدود المنطقة:", err));
+
   roadsData.features.forEach(f => {
     const coords = f.geometry.paths?.[0] || f.geometry.coordinates;
     const props = f.attributes || f.properties;
@@ -262,19 +285,6 @@ function getRoadColor(fclass) {
       return 'gray'; // اللون الافتراضي
   }
 }
-
-// تحميل حدود المنطقة
-fetch('data/border.json')
-  .then(res => res.json())
-  .then(boundaryData => {
-    const boundaryLayer = L.geoJSON(boundaryData, {
-      style: {
-        color: 'black',
-        weight: 2,
-        fillColor: '#f2f2f2',
-        fillOpacity: 0.2
-      }
-    }).addTo(map);
 
 
 loadMap();
