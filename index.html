@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>خريطة الخدمات الذكية</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <div id="sidebar">
+    <div id="filter-container">
+      <label for="typeFilter">اختر نوع الخدمة:</label>
+      <select id="typeFilter">
+        <option value="all">الكل</option>
+      </select>
+    </div>
+    <div id="info">جارٍ تحميل الخريطة...</div>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dijkstrajs@1/dijkstra.min.js"></script>
+  <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

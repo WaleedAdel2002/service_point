@@ -1,0 +1,177 @@
+{
+  "displayFieldName" : "",
+  "fieldAliases" : {
+    "FID" : "FID",
+    "Name" : "Name",
+    "type" : "type"
+  },
+  "geometryType" : "esriGeometryPoint",
+  "spatialReference" : {
+    "wkid" : 4326,
+    "latestWkid" : 4326
+  },
+  "fields" : [
+    {
+      "name" : "FID",
+      "type" : "esriFieldTypeOID",
+      "alias" : "FID"
+    },
+    {
+      "name" : "Name",
+      "type" : "esriFieldTypeString",
+      "alias" : "Name",
+      "length" : 254
+    },
+    {
+      "name" : "type",
+      "type" : "esriFieldTypeString",
+      "alias" : "type",
+      "length" : 50
+    }
+  ],
+  "features" : [
+    {
+      "attributes" : {
+        "FID" : 0,
+        "Name" : "اسعاف الوقف الجديدة",
+        "type" : "نقطة اسعاف"
+      },
+      "geometry" : {
+        "x" : 32.438704286000075,
+        "y" : 26.050874391000036
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 1,
+        "Name" : "نقطة إسعاف المراشدة",
+        "type" : "نقطة اسعاف"
+      },
+      "geometry" : {
+        "x" : 32.506683600000031,
+        "y" : 26.101848200000063
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 2,
+        "Name" : " ",
+        "type" : "مستشفى"
+      },
+      "geometry" : {
+        "x" : 32.425840064633299,
+        "y" : 26.093185819784761
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 3,
+        "Name" : " ",
+        "type" : "نقطة اسعاف"
+      },
+      "geometry" : {
+        "x" : 32.425355710644475,
+        "y" : 26.09267980158759
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 4,
+        "Name" : " ",
+        "type" : "مسجد"
+      },
+      "geometry" : {
+        "x" : 32.425432920078606,
+        "y" : 26.092017864248213
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 5,
+        "Name" : " ",
+        "type" : "نقطة اطفاء"
+      },
+      "geometry" : {
+        "x" : 32.42772022172651,
+        "y" : 26.09018878943899
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 6,
+        "Name" : " ",
+        "type" : "مسجد"
+      },
+      "geometry" : {
+        "x" : 32.427930297464563,
+        "y" : 26.089317260154072
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 7,
+        "Name" : " ",
+        "type" : "صيدلية"
+      },
+      "geometry" : {
+        "x" : 32.426736067727539,
+        "y" : 26.088249750100907
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 8,
+        "Name" : " ",
+        "type" : "مدرسة اعدادية"
+      },
+      "geometry" : {
+        "x" : 32.426698448432049,
+        "y" : 26.087988668316008
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 9,
+        "Name" : " ",
+        "type" : "صيدلية"
+      },
+      "geometry" : {
+        "x" : 32.425013583562425,
+        "y" : 26.087359018353645
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 10,
+        "Name" : " ",
+        "type" : "مركز شباب"
+      },
+      "geometry" : {
+        "x" : 32.425040052338559,
+        "y" : 26.086544456959238
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 11,
+        "Name" : " ",
+        "type" : "بريد"
+      },
+      "geometry" : {
+        "x" : 32.423629270495177,
+        "y" : 26.085921736150912
+      }
+    },
+    {
+      "attributes" : {
+        "FID" : 12,
+        "Name" : " ",
+        "type" : "شرطة"
+      },
+      "geometry" : {
+        "x" : 32.421834500936988,
+        "y" : 26.090772452289432
+      }
+    }
+  ]
+}

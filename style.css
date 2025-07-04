@@ -1,0 +1,33 @@
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  height: 100vh;
+  direction: rtl;
+}
+
+#sidebar {
+  width: 20%;
+  padding: 10px;
+  background-color: #f1f1f1;
+  overflow-y: auto;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+}
+
+#map {
+  width: 80%;
+  height: 100vh;
+}
+
+#filter-container {
+  margin-bottom: 20px;
+  background-color: #e9ecef;
+  padding: 10px;
+}
+
+#info {
+  background-color: #f8f9fa;
+  padding: 10px;
+  font-size: 1rem;
+}
