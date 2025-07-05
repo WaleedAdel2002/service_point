@@ -499,8 +499,8 @@ document.getElementById("locateBtn").addEventListener("click", () => {
 
 function getRoadColor(fclass) {
   switch (fclass) {
-    case 'motorway':
-    case 'highway':
+    case 'primary':
+    case 'primary_link':
       return '#ff4d4d';
     case 'primary':
       return '#ffa500';
