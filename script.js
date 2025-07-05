@@ -15,7 +15,7 @@ let borderLayer = L.layerGroup();
 let userMarker = null;
 let destinationMarker = null;
 
-// أيقونات مخصصة
+// أيقونات مخصصة (تظل كما هي)
 const greenIcon = L.icon({
   iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
   iconSize: [25, 41],
@@ -30,29 +30,48 @@ const redIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
-// *** إضافة جديدة: تعريف الألوان/الأيقونات لأنواع الخدمات المختلفة
-const serviceTypeColors = {
-    "مستشفى": 'blue',
-    "مدرسة": 'orange',
-    "جامعة": 'purple',
-    "مسجد": 'darkgreen',
-    "مركز صحي": 'cadetblue',
-    "مخبز": 'darkred',
-    "صيدلية": 'darkblue',
-    "بنك": 'darkpurple',
-    // أضف المزيد من الأنواع والألوان هنا
-    // يمكنك استخدام 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-{color}.png'
-    // مع استبدال {color} باللون المطلوب مثل 'blue', 'orange', 'purple', 'green', 'yellow', 'grey', 'black'
+// *** تعديل هنا: تعريف خريطة للأيقونات المخصصة (محلية أو ملونة)
+const serviceIconMap = {
+    "مستشفى": { localImage: 'images/hospital.png' }, // مثال: أيقونة محلية
+    "مدرسة": { localImage: 'images/school.png' },   // مثال: أيقونة محلية
+    "جامعة": { color: 'purple' },                   // مثال: أيقونة ملونة (إذا لم تكن هناك أيقونة محلية)
+    "مسجد": { localImage: 'images/mosque.png' },
+    "مركز صحي": { color: 'cadetblue' },
+    "مخبز": { localImage: 'images/bakery.png' },
+    "صيدلية": { color: 'darkblue' },
+    "بنك": { localImage: 'images/bank.png' },
+    // أضف المزيد من الأنواع هنا.
+    // استخدم { localImage: 'path/to/your/icon.png' } لأيقونة من مجلد images.
+    // استخدم { color: 'لون' } لأيقونة ملونة من Leaflet Color Markers.
+    // الألوان المتاحة: 'red', 'blue', 'green', 'orange', 'yellow', 'purple', 'grey', 'black',
+    // 'darkred', 'darkblue', 'darkgreen', 'darkpurple', 'cadetblue'
 };
 
-// دالة للحصول على أيقونة بناءً على نوع الخدمة
+// *** تعديل هنا: دالة للحصول على أيقونة بناءً على نوع الخدمة
 function getServiceIcon(type) {
-    const color = serviceTypeColors[type] || 'grey'; // لون افتراضي إذا لم يتم العثور على النوع
-    return L.icon({
-        iconUrl: `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-${color}.png`,
+    const iconConfig = serviceIconMap[type];
+    let iconUrl;
+    let iconOptions = {
         iconSize: [25, 41],
         iconAnchor: [12, 41],
         popupAnchor: [1, -34],
+    };
+
+    if (iconConfig && iconConfig.localImage) {
+        // إذا كان هناك مسار لأيقونة محلية، استخدمه
+        iconUrl = iconConfig.localImage;
+        // يمكنك تعديل iconSize و iconAnchor هنا إذا كانت الأيقونات المحلية بأحجام مختلفة
+    } else if (iconConfig && iconConfig.color) {
+        // إذا كان هناك لون محدد، استخدم أيقونة Leaflet Color Markers
+        iconUrl = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-${iconConfig.color}.png`;
+    } else {
+        // أيقونة افتراضية (رمادية) إذا لم يتم العثور على إعدادات محددة
+        iconUrl = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-grey.png`;
+    }
+
+    return L.icon({
+        iconUrl: iconUrl,
+        ...iconOptions // دمج الخيارات القياسية
     });
 }
 
