@@ -15,6 +15,7 @@ let borderLayer = L.layerGroup();
 let userMarker = null;
 let destinationMarker = null;
 
+// أيقونات مخصصة
 const greenIcon = L.icon({
   iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
   iconSize: [25, 41],
@@ -28,6 +29,33 @@ const redIcon = L.icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
 });
+
+// *** إضافة جديدة: تعريف الألوان/الأيقونات لأنواع الخدمات المختلفة
+const serviceTypeColors = {
+    "مستشفى": 'blue',
+    "مدرسة": 'orange',
+    "جامعة": 'purple',
+    "مسجد": 'darkgreen',
+    "مركز صحي": 'cadetblue',
+    "مخبز": 'darkred',
+    "صيدلية": 'darkblue',
+    "بنك": 'darkpurple',
+    // أضف المزيد من الأنواع والألوان هنا
+    // يمكنك استخدام 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-{color}.png'
+    // مع استبدال {color} باللون المطلوب مثل 'blue', 'orange', 'purple', 'green', 'yellow', 'grey', 'black'
+};
+
+// دالة للحصول على أيقونة بناءً على نوع الخدمة
+function getServiceIcon(type) {
+    const color = serviceTypeColors[type] || 'grey'; // لون افتراضي إذا لم يتم العثور على النوع
+    return L.icon({
+        iconUrl: `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-${color}.png`,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+}
+
 
 function formatTime(minutes) {
   const totalSeconds = Math.round(minutes * 60);
@@ -105,12 +133,11 @@ function displayFeatureInfo(properties, title = "معلومات الميزة") {
   document.getElementById('info').innerHTML = infoHtml;
 }
 
-// دالة جديدة لعرض نقاط الخدمة بناءً على الفلتر
 function displayServicePoints(filterValue) {
-    servicePointsLayer.clearLayers(); // مسح جميع النقاط الحالية
+    servicePointsLayer.clearLayers();
     servicePoints.forEach(s => {
         if (filterValue === "all" || s.type === filterValue) {
-            s.marker.addTo(servicePointsLayer); // أضف النقطة إذا كانت تتوافق مع الفلتر
+            s.marker.addTo(servicePointsLayer);
         }
     });
 }
@@ -209,7 +236,8 @@ async function loadMap() {
     const latlng = [coord[1], coord[0]];
     typesSet.add(type);
 
-    const marker = L.marker(latlng).bindPopup(name);
+    // *** التعديل هنا: استخدام getServiceIcon لإنشاء الأيقونة
+    const marker = L.marker(latlng, { icon: getServiceIcon(type) }).bindPopup(name);
     marker.on('click', function() {
       displayFeatureInfo(props, `معلومات الخدمة: ${name}`);
     });
@@ -224,25 +252,13 @@ async function loadMap() {
     typeSelect.appendChild(option);
   });
 
-  // *** التعديل هنا: عرض نقاط الخدمة فور تحميل الخريطة
-  displayServicePoints('all'); // عرض كل نقاط الخدمة عند التحميل الأولي
-
-  // *** التعديل هنا: إزالة استدعاء runRouting() المباشر من getCurrentPosition()
-  // navigator.geolocation.getCurrentPosition(pos => {
-  //   userLat = pos.coords.latitude;
-  //   userLng = pos.coords.longitude;
-
-  //   if (userMarker) map.removeLayer(userMarker);
-  //   userMarker = L.marker([userLat, userLng], { icon: greenIcon }).addTo(map).bindPopup("📍 أنت هنا").openPopup();
-
-  //   // runRouting(); // تم إزالة هذا الاستدعاء التلقائي
-  // });
+  displayServicePoints('all');
 
   typeSelect.addEventListener("change", () => {
     const selectedType = document.getElementById("typeFilter").value;
-    displayServicePoints(selectedType); // تحديث عرض النقاط بناءً على الفلتر
-    if (userLat && userLng) { // فقط إذا كان موقع المستخدم معروفًا
-        runRouting(); // حساب المسار بعد تغيير الفلتر إذا كان الموقع متاحًا
+    displayServicePoints(selectedType);
+    if (userLat && userLng) {
+        runRouting();
     } else {
         document.getElementById('info').textContent = 'الرجاء تحديد موقعك أولاً أو الضغط على "موقعي".';
         routeLayer.clearLayers();
@@ -308,7 +324,7 @@ function runRouting() {
   let best = { dist: Infinity, length: 0, service: null, path: [] };
 
   servicePoints.forEach(s => {
-    if (s.type !== selectedType) return; // فقط قم بمعالجة نوع الخدمة المحدد
+    if (s.type !== selectedType) return;
 
     const [lat, lng] = s.coord;
     const targetNode = findClosestNode(lng, lat, Object.keys(graph));
@@ -338,7 +354,8 @@ function runRouting() {
     L.polyline(latlngs, { color: 'blue' }).addTo(routeLayer);
     map.fitBounds(latlngs, { padding: [50, 50] });
 
-    destinationMarker = L.marker(best.service.coord, { icon: redIcon })
+    // *** التعديل هنا: استخدام نفس الأيقونة المخصصة لنقطة الوجهة
+    destinationMarker = L.marker(best.service.coord, { icon: getServiceIcon(best.service.type) })
       .addTo(map)
       .bindPopup(`📌 ${best.service.name}`)
       .openPopup();
@@ -382,7 +399,6 @@ document.getElementById("locateBtn").addEventListener("click", () => {
       .openPopup();
 
     map.setView([userLat, userLng], 15);
-    // الآن بعد تحديد الموقع وتحديث الخريطة، يمكننا تشغيل التوجيه
     runRouting();
   }, (error) => {
       console.error("خطأ في تحديد الموقع:", error);
