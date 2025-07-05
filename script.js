@@ -32,7 +32,7 @@ const redIcon = L.icon({
 
 // *** تعديل هنا: تعريف خريطة للأيقونات المخصصة (محلية أو ملونة)
 const serviceIconMap = {
-    "مستشفى": { localImage: 'images/hospital.png' }, // مثال: أيقونة محلية
+    "مستشفى": { localImage: 'red' }, // مثال: أيقونة محلية
     "مدرسة": { localImage: 'images/school.png' },   // مثال: أيقونة محلية
     "جامعة": { color: 'purple' },                   // مثال: أيقونة ملونة (إذا لم تكن هناك أيقونة محلية)
     "مسجد": { localImage: 'images/mosque.png' },
