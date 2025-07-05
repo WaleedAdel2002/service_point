@@ -47,11 +47,11 @@ function getRoadColor(fclass) {
       return '#ff4d4d';
     case 'primary':
       return '#ffa500';
-    case 'secondary':
+    case 'unclassified':
       return '#28a745';
     case 'residential':
       return '#007bff';
-    case 'track':
+    case 'trunk':
       return '#8e44ad';
     default:
       return 'gray';
