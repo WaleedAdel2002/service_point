@@ -167,87 +167,6 @@ function displayServicePoints(filterValue) {
     });
 }
 
-// *** تم تعديل هذه الدالة لتشمل مفتاح الخدمات والطرق والحدود ***
-function generateMapLegendControl() {
-    const legend = L.control({ position: 'topleft' }); // الموضع: الركن الأيسر العلوي
-
-    legend.onAdd = function (map) {
-        const div = L.DomUtil.create('div', 'info legend'); // إنشاء div لمفتاح الخريطة
-        div.innerHTML = '<h4>مفتاح الخريطة:</h4>'; // عنوان المفتاح الرئيسي
-
-        // مفتاح الخدمات
-        div.innerHTML += '<h5>نقاط الخدمة:</h5>';
-        const uniqueServiceTypes = new Set(servicePoints.map(s => s.type));
-        Array.from(uniqueServiceTypes).sort().forEach(type => {
-            const iconConfig = serviceIconMap[type];
-            let iconSrc;
-
-            if (iconConfig && iconConfig.localImage) {
-                iconSrc = iconConfig.localImage;
-            } else if (iconConfig && iconConfig.color) {
-                iconSrc = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-${iconConfig.color}.png`;
-            } else {
-                iconSrc = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-grey.png`;
-            }
-
-            div.innerHTML += `
-                <div class="legend-item">
-                    <img src="${iconSrc}" class="legend-icon" alt="${type}">
-                    <span>${type}</span>
-                </div>
-            `;
-        });
-
-        // مفتاح الطرق
-        div.innerHTML += '<h5>الطرق:</h5>';
-        const roadClasses = {
-            'footway': 'footway',
-            'residential': 'residential',
-            'primary': 'primary',
-            'trunk': 'trunk',
-            'unclassified': 'unclassified',
-            'track': 'طريق ترابي',
-            'default': 'أخرى/غير معروف' // لتمثيل الفئات غير المعروفة
-        };
-
-        const uniqueRoadClasses = new Set();
-        roadsLayer.eachLayer(layer => {
-            const properties = layer.feature?.properties || layer.feature?.attributes;
-            const fclass = properties?.fclass || 'default';
-            uniqueRoadClasses.add(fclass);
-        });
-
-        const sortedRoadClasses = Array.from(uniqueRoadClasses).sort();
-        // تأكد من أن 'default' يظهر دائمًا في النهاية إذا كان موجودًا
-        if (sortedRoadClasses.includes('default')) {
-            sortedRoadClasses.splice(sortedRoadClasses.indexOf('default'), 1);
-            sortedRoadClasses.push('default');
-        }
-
-        sortedRoadClasses.forEach(fclass => {
-            const color = getRoadColor(fclass);
-            const displayName = roadClasses[fclass] || roadClasses['default'];
-            div.innerHTML += `
-                <div class="legend-item">
-                    <div class="legend-color-box" style="background-color: ${color};"></div>
-                    <span>${displayName}</span>
-                </div>
-            `;
-        });
-
-        // مفتاح الحدود
-        div.innerHTML += '<h5>الحدود:</h5>';
-        div.innerHTML += `
-            <div class="legend-item">
-                <div class="legend-color-box" style="background-color: purple;"></div>
-                <span>حدود المنطقة</span>
-            </div>
-        `;
-
-        return div;
-    };
-    return legend;
-}
 
 async function loadMap() {
   map = L.map('map').setView([26.09, 32.43], 12);
@@ -516,5 +435,86 @@ document.getElementById("locateBtn").addEventListener("click", () => {
 });
 
 
+// *** تم تعديل هذه الدالة لتشمل مفتاح الخدمات والطرق والحدود ***
+function generateMapLegendControl() {
+    const legend = L.control({ position: 'topleft' }); // الموضع: الركن الأيسر العلوي
+
+    legend.onAdd = function (map) {
+        const div = L.DomUtil.create('div', 'info legend'); // إنشاء div لمفتاح الخريطة
+        div.innerHTML = '<h4>مفتاح الخريطة:</h4>'; // عنوان المفتاح الرئيسي
+
+        // مفتاح الخدمات
+        div.innerHTML += '<h5>نقاط الخدمة:</h5>';
+        const uniqueServiceTypes = new Set(servicePoints.map(s => s.type));
+        Array.from(uniqueServiceTypes).sort().forEach(type => {
+            const iconConfig = serviceIconMap[type];
+            let iconSrc;
+
+            if (iconConfig && iconConfig.localImage) {
+                iconSrc = iconConfig.localImage;
+            } else if (iconConfig && iconConfig.color) {
+                iconSrc = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-${iconConfig.color}.png`;
+            } else {
+                iconSrc = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-grey.png`;
+            }
+
+            div.innerHTML += `
+                <div class="legend-item">
+                    <img src="${iconSrc}" class="legend-icon" alt="${type}">
+                    <span>${type}</span>
+                </div>
+            `;
+        });
+
+        // مفتاح الطرق
+        div.innerHTML += '<h5>الطرق:</h5>';
+        const roadClasses = {
+            'footway': 'footway',
+            'residential': 'residential',
+            'primary': 'primary',
+            'trunk': 'trunk',
+            'unclassified': 'unclassified',
+            'track': 'طريق ترابي',
+            'default': 'أخرى/غير معروف' // لتمثيل الفئات غير المعروفة
+        };
+
+        const uniqueRoadClasses = new Set();
+        roadsLayer.eachLayer(layer => {
+            const properties = layer.feature?.properties || layer.feature?.attributes;
+            const fclass = properties?.fclass || 'default';
+            uniqueRoadClasses.add(fclass);
+        });
+
+        const sortedRoadClasses = Array.from(uniqueRoadClasses).sort();
+        // تأكد من أن 'default' يظهر دائمًا في النهاية إذا كان موجودًا
+        if (sortedRoadClasses.includes('default')) {
+            sortedRoadClasses.splice(sortedRoadClasses.indexOf('default'), 1);
+            sortedRoadClasses.push('default');
+        }
+
+        sortedRoadClasses.forEach(fclass => {
+            const color = getRoadColor(fclass);
+            const displayName = roadClasses[fclass] || roadClasses['default'];
+            div.innerHTML += `
+                <div class="legend-item">
+                    <div class="legend-color-box" style="background-color: ${color};"></div>
+                    <span>${displayName}</span>
+                </div>
+            `;
+        });
+
+        // مفتاح الحدود
+        div.innerHTML += '<h5>الحدود:</h5>';
+        div.innerHTML += `
+            <div class="legend-item">
+                <div class="legend-color-box" style="background-color: purple;"></div>
+                <span>حدود المنطقة</span>
+            </div>
+        `;
+
+        return div;
+    };
+    return legend;
+}
 
 loadMap();
