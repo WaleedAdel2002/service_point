@@ -183,7 +183,7 @@ function generateMapLegendControl() {
         // مفتاح الطرق
         div.innerHTML += '<h5>الطرق:</h5>';
         const roadClasses = {
-            'motorway': 'طريق سريع/رئيسي',
+            'footway': 'footway',
             'highway': 'طريق سريع/رئيسي',
             'primary': 'طريق أساسي',
             'secondary': 'طريق ثانوي',
