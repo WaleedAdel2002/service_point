@@ -184,10 +184,10 @@ function generateMapLegendControl() {
         div.innerHTML += '<h5>الطرق:</h5>';
         const roadClasses = {
             'footway': 'footway',
-            'highway': 'طريق سريع/رئيسي',
-            'primary': 'طريق أساسي',
-            'secondary': 'طريق ثانوي',
-            'residential': 'طريق سكني',
+            'residential': 'residential',
+            'primary': 'primary',
+            'trunk': 'trunk',
+            'unclassified': 'unclassified',
             'track': 'طريق ترابي',
             'default': 'أخرى/غير معروف' // لتمثيل الفئات غير المعروفة
         };
