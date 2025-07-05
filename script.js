@@ -250,8 +250,8 @@ async function loadMap() {
   borderLayer.addTo(map);
 
   const baseMaps = {
-    "خريطة الشارع": osmLayer,
-    "صور جوية": esriWorldImagery
+    "OSM": osmLayer,
+    "Google earth": esriWorldImagery
   };
 
   L.control.layers(baseMaps).addTo(map);
