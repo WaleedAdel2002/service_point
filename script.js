@@ -35,7 +35,7 @@ const serviceIconMap = {
     "مستشفى": { color: 'red' }, // مثال: أيقونة محلية
     "مدرسة": { localImage: 'images/school.png' },   // مثال: أيقونة محلية
     "جامعة": { color: 'purple' },                   // مثال: أيقونة ملونة (إذا لم تكن هناك أيقونة محلية)
-    "مسجد": { localImage: 'images/cv.jpg' },
+    "مسجد": { localImage: 'images/11.jpg' },
     "مركز صحي": { color: 'cadetblue' },
     "مخبز": { localImage: 'images/bakery.png' },
     "صيدلية": { color: 'darkblue' },
