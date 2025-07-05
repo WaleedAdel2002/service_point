@@ -40,6 +40,24 @@ const serviceIconMap = {
     "بنك": { localImage: 'images/bank.png' },
     // أضف المزيد من الأنواع هنا مع مسارات صورك المحلية أو الألوان
 };
+function getRoadColor(fclass) {
+  switch (fclass) {
+    case 'primary':
+    case 'primary_link':
+      return '#ff4d4d';
+    case 'primary':
+      return '#ffa500';
+    case 'secondary':
+      return '#28a745';
+    case 'residential':
+      return '#007bff';
+    case 'track':
+      return '#8e44ad';
+    default:
+      return 'gray';
+  }
+}
+
 
 function getServiceIcon(type) {
     const iconConfig = serviceIconMap[type];
@@ -497,22 +515,6 @@ document.getElementById("locateBtn").addEventListener("click", () => {
   });
 });
 
-function getRoadColor(fclass) {
-  switch (fclass) {
-    case 'primary':
-    case 'primary_link':
-      return '#ff4d4d';
-    case 'primary':
-      return '#ffa500';
-    case 'secondary':
-      return '#28a745';
-    case 'residential':
-      return '#007bff';
-    case 'track':
-      return '#8e44ad';
-    default:
-      return 'gray';
-  }
-}
+
 
 loadMap();
