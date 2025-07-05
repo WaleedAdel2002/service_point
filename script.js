@@ -15,7 +15,6 @@ let borderLayer = L.layerGroup();
 let userMarker = null;
 let destinationMarker = null;
 
-// أيقونات مخصصة (تظل كما هي)
 const greenIcon = L.icon({
   iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-green.png',
   iconSize: [25, 41],
@@ -30,24 +29,18 @@ const redIcon = L.icon({
   popupAnchor: [1, -34],
 });
 
-// *** تعديل هنا: تعريف خريطة للأيقونات المخصصة (محلية أو ملونة)
 const serviceIconMap = {
-    "مستشفى": { color: 'red' }, // مثال: أيقونة محلية
-    "مدرسة": { localImage: 'images/school.png' },   // مثال: أيقونة محلية
-    "جامعة": { color: 'purple' },                   // مثال: أيقونة ملونة (إذا لم تكن هناك أيقونة محلية)
-    "مسجد": { localImage: 'images/11.jpg' },
+    "مستشفى": { localImage: 'images/hospital.png' },
+    "مدرسة": { localImage: 'images/school.png' },
+    "جامعة": { color: 'purple' },
+    "مسجد": { localImage: 'images/mosque.png' },
     "مركز صحي": { color: 'cadetblue' },
     "مخبز": { localImage: 'images/bakery.png' },
     "صيدلية": { color: 'darkblue' },
     "بنك": { localImage: 'images/bank.png' },
-    // أضف المزيد من الأنواع هنا.
-    // استخدم { localImage: 'path/to/your/icon.png' } لأيقونة من مجلد images.
-    // استخدم { color: 'لون' } لأيقونة ملونة من Leaflet Color Markers.
-    // الألوان المتاحة: 'red', 'blue', 'green', 'orange', 'yellow', 'purple', 'grey', 'black',
-    // 'darkred', 'darkblue', 'darkgreen', 'darkpurple', 'cadetblue'
+    // أضف المزيد من الأنواع هنا مع مسارات صورك المحلية أو الألوان
 };
 
-// *** تعديل هنا: دالة للحصول على أيقونة بناءً على نوع الخدمة
 function getServiceIcon(type) {
     const iconConfig = serviceIconMap[type];
     let iconUrl;
@@ -58,23 +51,18 @@ function getServiceIcon(type) {
     };
 
     if (iconConfig && iconConfig.localImage) {
-        // إذا كان هناك مسار لأيقونة محلية، استخدمه
         iconUrl = iconConfig.localImage;
-        // يمكنك تعديل iconSize و iconAnchor هنا إذا كانت الأيقونات المحلية بأحجام مختلفة
     } else if (iconConfig && iconConfig.color) {
-        // إذا كان هناك لون محدد، استخدم أيقونة Leaflet Color Markers
         iconUrl = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-${iconConfig.color}.png`;
     } else {
-        // أيقونة افتراضية (رمادية) إذا لم يتم العثور على إعدادات محددة
         iconUrl = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-grey.png`;
     }
 
     return L.icon({
         iconUrl: iconUrl,
-        ...iconOptions // دمج الخيارات القياسية
+        ...iconOptions
     });
 }
-
 
 function formatTime(minutes) {
   const totalSeconds = Math.round(minutes * 60);
@@ -159,6 +147,88 @@ function displayServicePoints(filterValue) {
             s.marker.addTo(servicePointsLayer);
         }
     });
+}
+
+// *** تم تعديل هذه الدالة لتشمل مفتاح الخدمات والطرق والحدود ***
+function generateMapLegendControl() {
+    const legend = L.control({ position: 'topleft' }); // الموضع: الركن الأيسر العلوي
+
+    legend.onAdd = function (map) {
+        const div = L.DomUtil.create('div', 'info legend'); // إنشاء div لمفتاح الخريطة
+        div.innerHTML = '<h4>مفتاح الخريطة:</h4>'; // عنوان المفتاح الرئيسي
+
+        // مفتاح الخدمات
+        div.innerHTML += '<h5>نقاط الخدمة:</h5>';
+        const uniqueServiceTypes = new Set(servicePoints.map(s => s.type));
+        Array.from(uniqueServiceTypes).sort().forEach(type => {
+            const iconConfig = serviceIconMap[type];
+            let iconSrc;
+
+            if (iconConfig && iconConfig.localImage) {
+                iconSrc = iconConfig.localImage;
+            } else if (iconConfig && iconConfig.color) {
+                iconSrc = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-${iconConfig.color}.png`;
+            } else {
+                iconSrc = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-grey.png`;
+            }
+
+            div.innerHTML += `
+                <div class="legend-item">
+                    <img src="${iconSrc}" class="legend-icon" alt="${type}">
+                    <span>${type}</span>
+                </div>
+            `;
+        });
+
+        // مفتاح الطرق
+        div.innerHTML += '<h5>الطرق:</h5>';
+        const roadClasses = {
+            'motorway': 'طريق سريع/رئيسي',
+            'highway': 'طريق سريع/رئيسي',
+            'primary': 'طريق أساسي',
+            'secondary': 'طريق ثانوي',
+            'residential': 'طريق سكني',
+            'track': 'طريق ترابي',
+            'default': 'أخرى/غير معروف' // لتمثيل الفئات غير المعروفة
+        };
+
+        const uniqueRoadClasses = new Set();
+        roadsLayer.eachLayer(layer => {
+            const properties = layer.feature?.properties || layer.feature?.attributes;
+            const fclass = properties?.fclass || 'default';
+            uniqueRoadClasses.add(fclass);
+        });
+
+        const sortedRoadClasses = Array.from(uniqueRoadClasses).sort();
+        // تأكد من أن 'default' يظهر دائمًا في النهاية إذا كان موجودًا
+        if (sortedRoadClasses.includes('default')) {
+            sortedRoadClasses.splice(sortedRoadClasses.indexOf('default'), 1);
+            sortedRoadClasses.push('default');
+        }
+
+        sortedRoadClasses.forEach(fclass => {
+            const color = getRoadColor(fclass);
+            const displayName = roadClasses[fclass] || roadClasses['default'];
+            div.innerHTML += `
+                <div class="legend-item">
+                    <div class="legend-color-box" style="background-color: ${color};"></div>
+                    <span>${displayName}</span>
+                </div>
+            `;
+        });
+
+        // مفتاح الحدود
+        div.innerHTML += '<h5>الحدود:</h5>';
+        div.innerHTML += `
+            <div class="legend-item">
+                <div class="legend-color-box" style="background-color: purple;"></div>
+                <span>حدود المنطقة</span>
+            </div>
+        `;
+
+        return div;
+    };
+    return legend;
 }
 
 async function loadMap() {
@@ -255,7 +325,6 @@ async function loadMap() {
     const latlng = [coord[1], coord[0]];
     typesSet.add(type);
 
-    // *** التعديل هنا: استخدام getServiceIcon لإنشاء الأيقونة
     const marker = L.marker(latlng, { icon: getServiceIcon(type) }).bindPopup(name);
     marker.on('click', function() {
       displayFeatureInfo(props, `معلومات الخدمة: ${name}`);
@@ -286,6 +355,10 @@ async function loadMap() {
   });
 
   setupLayerControls();
+
+  // *** تم نقل استدعاء مفتاح الخريطة إلى هنا بعد تحميل جميع البيانات ***
+  const mapLegendControl = generateMapLegendControl();
+  mapLegendControl.addTo(map);
 }
 
 function setupLayerControls() {
@@ -373,7 +446,6 @@ function runRouting() {
     L.polyline(latlngs, { color: 'blue' }).addTo(routeLayer);
     map.fitBounds(latlngs, { padding: [50, 50] });
 
-    // *** التعديل هنا: استخدام نفس الأيقونة المخصصة لنقطة الوجهة
     destinationMarker = L.marker(best.service.coord, { icon: getServiceIcon(best.service.type) })
       .addTo(map)
       .bindPopup(`📌 ${best.service.name}`)

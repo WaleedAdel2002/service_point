@@ -1,110 +1,193 @@
+/* الأنماط العامة لمفتاح الخريطة */
+.info.legend {
+    background: white;
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background-color: rgba(255,255,255,0.9); /* خلفية شفافة قليلاً */
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    line-height: 18px; /* لتحسين تباعد الأسطر */
+}
+
+.info.legend h4 {
+    margin: 0 0 5px;
+    color: #333;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+.info.legend h5 { /* هذا النمط مهم لعناوين الأقسام الفرعية (الخدمات، الطرق) */
+    margin: 10px 0 5px;
+    color: #555;
+    font-size: 1em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 3px;
+}
+
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px; /* تقليل المسافة بين العناصر */
+    white-space: nowrap; /* منع انقسام النص إلى سطرين */
+}
+
+.legend-color-box {
+    width: 20px;
+    height: 12px;
+    border: 1px solid #555; /* حدود أغمق */
+    margin-left: 8px; /* هامش لليمين بدلاً من اليسار للغة العربية */
+    flex-shrink: 0; /* منع المربع من الانكماش */
+}
+.legend-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px; /* هامش لليمين بدلاً من اليسار للغة العربية */
+    object-fit: contain;
+    flex-shrink: 0; /* منع الأيقونة من الانكماش */
+}
+
+/* لضمان ظهور النص بشكل صحيح مع اللغة العربية */
+.info.legend .legend-item span {
+    direction: rtl;
+    text-align: right;
+    flex-grow: 1; /* السماح للنص بأخذ المساحة المتاحة */
+}
+
+/* بقية أكواد CSS الخاصة بك كما هي */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   display: flex;
-  flex-direction: column; /* لتوجيه العناصر رأسيًا: الرأس ثم المحتوى الرئيسي */
+  flex-direction: column;
   height: 100vh;
   direction: rtl;
 }
 
 header {
   display: flex;
-  justify-content: space-between; /* لتوزيع اللوجو والعنوان بالتساوي */
-  align-items: center; /* لمحاذاة العناصر عموديًا في المنتصف */
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 20px;
   background-color: #333;
   color: #fff;
-  height: 50px; /* ارتفاع الرأس */
+  height: 50px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  z-index: 1000; /* للتأكد من ظهور الرأس فوق الخريطة */
+  z-index: 1000;
 }
 
 .header-logo {
-  height: 40px; /* حجم اللوجو */
+  height: 40px;
   width: auto;
 }
 
 .header-title {
-  flex-grow: 1; /* للسماح للعنوان بأخذ المساحة المتبقية */
-  text-align: center; /* لتوسيط العنوان */
+  flex-grow: 1;
+  text-align: center;
 }
 
 .header-title h1 {
   margin: 0;
-  font-size: 1.8rem; /* حجم خط العنوان */
+  font-size: 1.8rem;
   color: #fff;
 }
 
 .main-content {
   display: flex;
-  flex-grow: 1; /* للسماح للمحتوى الرئيسي بأخذ المساحة المتبقية */
+  flex-grow: 1;
 }
 
 #sidebar {
-  width: 20%;
-  padding: 10px;
-  background-color: #f1f1f1;
-  overflow-y: auto;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
-  height: calc(100vh - 70px); /* ارتفاع الشريط الجانبي بعد خصم ارتفاع الرأس */
+  width: 280px; /* عرض الشريط الجانبي */
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  overflow-y: auto; /* لإضافة شريط تمرير إذا كان المحتوى طويلاً */
+  position: relative; /* للسماح بوضع العناصر الفرعية بشكل مطلق */
+  z-index: 999; /* للتأكد من أنها فوق الخريطة */
+  display: flex; /* لجعل عناصر الشريط الجانبي تتكدس بشكل صحيح */
+  flex-direction: column;
 }
 
 #map {
-  width: 80%;
-  height: calc(100vh - 70px); /* ارتفاع الخريطة بعد خصم ارتفاع الرأس */
-}
-
-#filter-container {
-  margin-bottom: 20px;
-  background-color: #e9ecef;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-#info {
-  background-color: #f8f9fa;
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #dee2e6;
-}
-
-/* أنماط الجدول داخل #info */
-#info table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  font-size: 0.85rem; /* حجم الخط أصغر */
-}
-
-#info th, #info td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: right;
-}
-
-#info th {
-  background-color: #f2f2f2;
+  flex-grow: 1; /* للسماح للخريطة بأخذ المساحة المتبقية */
+  height: 100%; /* تأكد من أن الخريطة تملأ المساحة المتاحة */
+  position: relative; /* لجعل عناصر التحكم في Leaflet تعمل بشكل صحيح */
 }
 
 #locateBtn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  margin: 10px 0;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
 }
 
 #locateBtn:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
+}
+
+#filter-container {
+    margin-bottom: 20px;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#filter-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+#typeFilter {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#info {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: auto; /* يدفع صندوق المعلومات إلى الأسفل */
+    text-align: right; /* محاذاة النص لليمين */
+    overflow-y: auto; /* إضافة شريط تمرير إذا كان المحتوى كبيراً */
+    max-height: 250px; /* تعيين ارتفاع أقصى */
+}
+
+#info table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+#info th, #info td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: right; /* محاذاة النص لليمين */
+}
+
+#info th {
+    background-color: #f2f2f2;
+    font-weight: bold;
 }
 
 #map-controls {
-  margin-top: 20px;
   background-color: #e9ecef;
   padding: 10px;
   border-radius: 5px;
@@ -161,33 +244,30 @@ header {
     left: 20px;
     background-color: #fff;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 1001;
     text-align: center;
-    z-index: 1000;
+    width: 250px;
 }
 
 .popup img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
     margin-bottom: 10px;
 }
 
 .popup h3 {
-    margin: 0;
-    font-size: 18px;
+    margin-top: 0;
     color: #333;
 }
 
 .popup p {
-    margin: 5px 0;
-    font-size: 14px;
     color: #666;
+    margin-bottom: 5px;
 }
 
-/* خلفية شبه شفافة عند ظهور النافذة */
 .overlay {
     display: none;
     position: fixed;
@@ -196,5 +276,5 @@ header {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    z-index: 1000;
 }
