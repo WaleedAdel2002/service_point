@@ -30,14 +30,16 @@ const redIcon = L.icon({
 });
 
 const serviceIconMap = {
-    "مستشفى": { localImage: 'images/hospital.png' },
-    "مدرسة": { localImage: 'images/school.png' },
+    "مستشفى": { localImage: 'images/مستشفى.png' },
+    "مدرسة": { localImage: 'images/مدرسة.jpg' },
     "جامعة": { color: 'purple' },
-    "مسجد": { localImage: 'images/mosque.png' },
+    "مسجد": { localImage: 'images/مسجد.png' },
     "مركز صحي": { color: 'cadetblue' },
     "مخبز": { localImage: 'images/bakery.png' },
-    "صيدلية": { color: 'darkblue' },
-    "بنك": { localImage: 'images/bank.png' },
+    "صيدلية": { localImage: 'images/صيدلية.png' },
+    "بنك": { localImage: 'images/بنك.jpg' },
+    "نقطة اطفاء": { localImage: 'images/اطفاء.png' },
+    "نقطة اسعاف": { localImage: 'images/اسعاف.png' },
     // أضف المزيد من الأنواع هنا مع مسارات صورك المحلية أو الألوان
 };
 
@@ -161,7 +163,7 @@ function getDirectionText(from, to) {
 function displayFeatureInfo(properties, title = "معلومات الميزة") {
     let infoHtml = `<h4>${title}</h4>`;
     infoHtml += '<table>';
-    infoHtml += '<thead><tr><th>الخاصية</th><th>القيمة</th></tr></thead>';
+    infoHtml += '<thead><tr><th>الحقل</th><th>القيمة</th></tr></thead>';
     infoHtml += '<tbody>';
     for (const key in properties) {
         if (properties.hasOwnProperty(key) && properties[key] !== null && properties[key] !== "" && key !== "FID") {
