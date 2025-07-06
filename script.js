@@ -435,15 +435,14 @@ document.getElementById("locateBtn").addEventListener("click", () => {
 });
 
 
-// *** تم تعديل هذه الدالة لتشمل مفتاح الخدمات والطرق والحدود ***
 function generateMapLegendControl() {
-    const legend = L.control({ position: 'topleft' }); // الموضع: الركن الأيسر العلوي
+    const legend = L.control({ position: 'topleft' });
 
     legend.onAdd = function (map) {
-        const div = L.DomUtil.create('div', 'info legend'); // إنشاء div لمفتاح الخريطة
-        div.innerHTML = '<h4>مفتاح الخريطة:</h4>'; // عنوان المفتاح الرئيسي
+        const div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML = '<h4>مفتاح الخريطة:</h4>';
 
-        // مفتاح الخدمات
+        // مفتاح الخدمات (هذا الجزء كان صحيحًا)
         div.innerHTML += '<h5>نقاط الخدمة:</h5>';
         const uniqueServiceTypes = new Set(servicePoints.map(s => s.type));
         Array.from(uniqueServiceTypes).sort().forEach(type => {
@@ -468,25 +467,27 @@ function generateMapLegendControl() {
 
         // مفتاح الطرق
         div.innerHTML += '<h5>الطرق:</h5>';
-        const roadClasses = {
-            'footway': 'footway',
-            'residential': 'residential',
-            'primary': 'primary',
-            'trunk': 'trunk',
-            'unclassified': 'unclassified',
+        const roadClassesMap = { // تم تغيير الاسم لتجنب الارتباك
+            'primary': 'طريق رئيسي', // تمت إضافة أسماء عربية أكثر وصفاً
+            'primary_link': 'وصلة طريق رئيسي',
+            'unclassified': 'طريق غير مصنف',
+            'residential': 'طريق سكني',
+            'trunk': 'طريق جذعي',
+            'footway': 'ممر للمشاة',
             'track': 'طريق ترابي',
-            'default': 'أخرى/غير معروف' // لتمثيل الفئات غير المعروفة
+            'default': 'أخرى/غير معروف'
         };
 
         const uniqueRoadClasses = new Set();
         roadsLayer.eachLayer(layer => {
             const properties = layer.feature?.properties || layer.feature?.attributes;
-            const fclass = properties?.fclass || 'default';
+            // تحويل fclass إلى أحرف صغيرة للبحث المتسق
+            const fclass = (properties?.fclass || 'default').toLowerCase();
             uniqueRoadClasses.add(fclass);
         });
 
         const sortedRoadClasses = Array.from(uniqueRoadClasses).sort();
-        // تأكد من أن 'default' يظهر دائمًا في النهاية إذا كان موجودًا
+        // التأكد من ظهور 'default' في النهاية إذا كان موجوداً
         if (sortedRoadClasses.includes('default')) {
             sortedRoadClasses.splice(sortedRoadClasses.indexOf('default'), 1);
             sortedRoadClasses.push('default');
@@ -494,7 +495,8 @@ function generateMapLegendControl() {
 
         sortedRoadClasses.forEach(fclass => {
             const color = getRoadColor(fclass);
-            const displayName = roadClasses[fclass] || roadClasses['default'];
+            // استخدام roadClassesMap لاسم العرض
+            const displayName = roadClassesMap[fclass] || roadClassesMap['default'];
             div.innerHTML += `
                 <div class="legend-item">
                     <div class="legend-color-box" style="background-color: ${color};"></div>
