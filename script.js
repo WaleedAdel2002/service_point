@@ -40,6 +40,9 @@ const serviceIconMap = {
     "بنك": { localImage: 'images/بنك.jpg' },
     "نقطة اطفاء": { localImage: 'images/اطفاء.jpg' },
     "نقطة اسعاف": { localImage: 'images/اسعاف.png' },
+    "بريد": { localImage: 'images/بريد.png' },
+    "شرطة": { localImage: 'images/شرطة.jpg' },
+    "مدرسة اعدادية": { localImage: 'images/مدرسة.jpg' },
     // أضف المزيد من الأنواع هنا مع مسارات صورك المحلية أو الألوان
 };
 
