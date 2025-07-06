@@ -41,21 +41,30 @@ const serviceIconMap = {
     // أضف المزيد من الأنواع هنا مع مسارات صورك المحلية أو الألوان
 };
 function getRoadColor(fclass) {
-  switch (fclass) {
-    case 'primary':
-    case 'primary_link':
-      return '#ff4d4d';
-    case 'primary':
-      return '#ffa500';
-    case 'unclassified':
-      return '#28a745';
-    case 'residential':
-      return '#007bff';
-    case 'trunk':
-      return '#8e44ad';
-    default:
-      return 'gray';
-  }
+    // قم بتحويل fclass إلى أحرف صغيرة للتأكد من المطابقة
+    const lowerFclass = fclass.toLowerCase();
+
+    switch (lowerFclass) {
+        case 'primary':
+            return '#ff4d4d'; // أحمر ساطع للطرق الرئيسية
+        case 'primary_link':
+            return '#ffa500'; // برتقالي لوصلات الطرق الرئيسية
+        case 'trunk':
+            return '#8e44ad'; // بنفسجي للطرق الجذعية
+        case 'trunk_link': // أضفنا هذه الحالة للون وصلات الطرق الجذعية
+            return '#4d2e7a'; // لون بنفسجي أغمق قليلا
+        case 'unclassified':
+            return '#28a745'; // أخضر للطرق غير المصنفة
+        case 'residential':
+            return '#007bff'; // أزرق للطرق السكنية
+        case 'footway': // أضفنا هذه الحالة لممرات المشاة
+            return '#cccccc'; // رمادي فاتح لممرات المشاة
+        // إذا كان لديك 'track' في بياناتك، فأضفه هنا
+        // case 'track':
+        //    return '#A52A2A'; // بني للطرق الترابية
+        default:
+            return 'gray'; // رمادي افتراضي لأي فئة غير معروفة
+    }
 }
 
 
@@ -435,6 +444,8 @@ document.getElementById("locateBtn").addEventListener("click", () => {
 });
 
 
+// ... (الكود السابق)
+
 function generateMapLegendControl() {
     const legend = L.control({ position: 'topleft' });
 
@@ -467,27 +478,25 @@ function generateMapLegendControl() {
 
         // مفتاح الطرق
         div.innerHTML += '<h5>الطرق:</h5>';
-        const roadClassesMap = { // تم تغيير الاسم لتجنب الارتباك
-            'primary': 'طريق رئيسي', // تمت إضافة أسماء عربية أكثر وصفاً
+        const roadClassesMap = {
+            'primary': 'طريق رئيسي',
             'primary_link': 'وصلة طريق رئيسي',
+            'trunk': 'طريق جذعي',
+            'trunk_link': 'وصلة طريق جذعي', // أضفنا هذه الفئة الجديدة
             'unclassified': 'طريق غير مصنف',
             'residential': 'طريق سكني',
-            'trunk': 'طريق جذعي',
-            'footway': 'ممر للمشاة',
-            'track': 'طريق ترابي',
-            'default': 'أخرى/غير معروف'
+            'footway': 'ممر للمشاة', // تأكدنا من وجودها
+            'default': 'أخرى/غير معروف' // ستظل لضمان التعامل مع أي فئات غير متوقعة
         };
 
         const uniqueRoadClasses = new Set();
         roadsLayer.eachLayer(layer => {
             const properties = layer.feature?.properties || layer.feature?.attributes;
-            // تحويل fclass إلى أحرف صغيرة للبحث المتسق
-            const fclass = (properties?.fclass || 'default').toLowerCase();
+            const fclass = (properties?.fclass || 'default').toLowerCase(); // لا يزال مهماً تحويلها لحروف صغيرة
             uniqueRoadClasses.add(fclass);
         });
 
         const sortedRoadClasses = Array.from(uniqueRoadClasses).sort();
-        // التأكد من ظهور 'default' في النهاية إذا كان موجوداً
         if (sortedRoadClasses.includes('default')) {
             sortedRoadClasses.splice(sortedRoadClasses.indexOf('default'), 1);
             sortedRoadClasses.push('default');
@@ -495,7 +504,6 @@ function generateMapLegendControl() {
 
         sortedRoadClasses.forEach(fclass => {
             const color = getRoadColor(fclass);
-            // استخدام roadClassesMap لاسم العرض
             const displayName = roadClassesMap[fclass] || roadClassesMap['default'];
             div.innerHTML += `
                 <div class="legend-item">
@@ -505,7 +513,7 @@ function generateMapLegendControl() {
             `;
         });
 
-        // مفتاح الحدود
+        // مفتاح الحدود (هذا الجزء كان صحيحًا)
         div.innerHTML += '<h5>الحدود:</h5>';
         div.innerHTML += `
             <div class="legend-item">
