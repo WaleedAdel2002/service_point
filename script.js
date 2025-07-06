@@ -38,7 +38,7 @@ const serviceIconMap = {
     "مخبز": { localImage: 'images/bakery.png' },
     "صيدلية": { localImage: 'images/صيدلية.png' },
     "بنك": { localImage: 'images/بنك.jpg' },
-    "نقطة اطفاء": { localImage: 'images/اطفاء.png' },
+    "نقطة اطفاء": { localImage: 'images/اطفاء.jpg' },
     "نقطة اسعاف": { localImage: 'images/اسعاف.png' },
     // أضف المزيد من الأنواع هنا مع مسارات صورك المحلية أو الألوان
 };
