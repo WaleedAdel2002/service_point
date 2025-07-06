@@ -34,8 +34,8 @@
 
 .legend-color-box {
     width: 20px;
-    height: 12px;
-    border: 1px solid #555; /* حدود أغمق */
+    height: 4px;
+    border: 0px solid #555; /* حدود أغمق */
     margin-left: 8px; /* هامش لليمين بدلاً من اليسار للغة العربية */
     flex-shrink: 0; /* منع المربع من الانكماش */
 }
