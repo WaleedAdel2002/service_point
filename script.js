@@ -444,7 +444,7 @@ document.getElementById("locateBtn").addEventListener("click", () => {
 });
 
 
-// ... (الكود السابق)
+// ... (الكود العلوي) ...
 
 function generateMapLegendControl() {
     const legend = L.control({ position: 'topleft' });
@@ -453,28 +453,7 @@ function generateMapLegendControl() {
         const div = L.DomUtil.create('div', 'info legend');
         div.innerHTML = '<h4>مفتاح الخريطة:</h4>';
 
-        // مفتاح الخدمات (هذا الجزء كان صحيحًا)
-        div.innerHTML += '<h5>نقاط الخدمة:</h5>';
-        const uniqueServiceTypes = new Set(servicePoints.map(s => s.type));
-        Array.from(uniqueServiceTypes).sort().forEach(type => {
-            const iconConfig = serviceIconMap[type];
-            let iconSrc;
-
-            if (iconConfig && iconConfig.localImage) {
-                iconSrc = iconConfig.localImage;
-            } else if (iconConfig && iconConfig.color) {
-                iconSrc = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-${iconConfig.color}.png`;
-            } else {
-                iconSrc = `https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-grey.png`;
-            }
-
-            div.innerHTML += `
-                <div class="legend-item">
-                    <img src="${iconSrc}" class="legend-icon" alt="${type}">
-                    <span>${type}</span>
-                </div>
-            `;
-        });
+        // ... (مفتاح الخدمات) ...
 
         // مفتاح الطرق
         div.innerHTML += '<h5>الطرق:</h5>';
@@ -482,21 +461,26 @@ function generateMapLegendControl() {
             'primary': 'طريق رئيسي',
             'primary_link': 'وصلة طريق رئيسي',
             'trunk': 'طريق جذعي',
-            'trunk_link': 'وصلة طريق جذعي', // أضفنا هذه الفئة الجديدة
+            'trunk_link': 'وصلة طريق جذعي',
             'unclassified': 'طريق غير مصنف',
             'residential': 'طريق سكني',
-            'footway': 'ممر للمشاة', // تأكدنا من وجودها
-            'default': 'أخرى/غير معروف' // ستظل لضمان التعامل مع أي فئات غير متوقعة
+            'footway': 'ممر للمشاة',
+            'default': 'أخرى/غير معروف'
         };
 
         const uniqueRoadClasses = new Set();
+        console.log("Starting to collect unique road classes...");
         roadsLayer.eachLayer(layer => {
             const properties = layer.feature?.properties || layer.feature?.attributes;
-            const fclass = (properties?.fclass || 'default').toLowerCase(); // لا يزال مهماً تحويلها لحروف صغيرة
+            const fclass = (properties?.fclass || 'default').toLowerCase();
             uniqueRoadClasses.add(fclass);
+            console.log("Discovered fclass from layer:", fclass); // سجل لكل fclass يتم اكتشافه
         });
 
+        console.log("All unique road classes found in roadsLayer:", Array.from(uniqueRoadClasses)); // سجل نهائي ومهم
+
         const sortedRoadClasses = Array.from(uniqueRoadClasses).sort();
+        // تأكد من ظهور 'default' في النهاية إذا كان موجوداً
         if (sortedRoadClasses.includes('default')) {
             sortedRoadClasses.splice(sortedRoadClasses.indexOf('default'), 1);
             sortedRoadClasses.push('default');
@@ -505,6 +489,7 @@ function generateMapLegendControl() {
         sortedRoadClasses.forEach(fclass => {
             const color = getRoadColor(fclass);
             const displayName = roadClassesMap[fclass] || roadClassesMap['default'];
+            console.log(`Adding to legend: fclass=${fclass}, displayName=${displayName}, color=${color}`);
             div.innerHTML += `
                 <div class="legend-item">
                     <div class="legend-color-box" style="background-color: ${color};"></div>
@@ -513,18 +498,13 @@ function generateMapLegendControl() {
             `;
         });
 
-        // مفتاح الحدود (هذا الجزء كان صحيحًا)
-        div.innerHTML += '<h5>الحدود:</h5>';
-        div.innerHTML += `
-            <div class="legend-item">
-                <div class="legend-color-box" style="background-color: purple;"></div>
-                <span>حدود المنطقة</span>
-            </div>
-        `;
+        // ... (مفتاح الحدود) ...
 
         return div;
     };
     return legend;
 }
+
+
 
 loadMap();
