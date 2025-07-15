@@ -1,0 +1,315 @@
+/* General Body & HTML Setup */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa; /* Light background */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    direction: rtl; /* For RTL support */
+    text-align: right; /* Default text alignment for RTL */
+    line-height: 1.6;
+}
+
+/* Header */
+.project-header {
+    background-color: #007bff; /* Primary blue */
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    text-align: center; /* Center content horizontally */
+}
+
+.header-content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-wrap: nowrap; /* منع التفاف العناصر */
+}
+
+/* صورة يمين */
+.header-logo {
+    height: 70px;
+    margin-left: 20px;
+    border-radius: 20%;
+    border: 3px solid rgba(255,255,255,0.7);
+    flex-shrink: 0;
+}
+
+/* صورة يسار */
+.header-logo1 {
+    height: 70px;
+    margin-right: 20px;
+    border-radius: 20%;
+    border: 3px solid rgba(255,255,255,0.7);
+    flex-shrink: 0;
+}
+
+/* النص في المنتصف */
+.header-text {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0 20px;
+}
+
+
+.project-header h1 {
+    margin: 0;
+    font-size: 1.5em;
+    line-height: 1.3;
+}
+
+.project-header p {
+    margin: 5px 0 0;
+    font-size: 1em;
+    opacity: 0.9;
+}
+
+.access-map-button {
+    display: inline-block;
+    background-color: #28a745; /* Green button */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1em;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.access-map-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.access-map-button .fas {
+    margin-left: 10px; /* Space icon from text for RTL */
+}
+
+/* Main Content */
+.project-main-content {
+    max-width: 1200px;
+    margin: 4px auto;
+    padding: 0 20px;
+    flex: 1; /* Allow content to grow */
+}
+
+.section {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    padding: 4px;
+    margin-bottom: 4px;
+}
+
+.section-title {
+    color: #007bff;
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.section-title .fas {
+    margin-left: 5px;
+    font-size: 1.2em;
+    color: #555;
+}
+
+/* Person Card Styling */
+.person-card {
+    display: flex; /* **المفتاح:** يجعل الصورة والنص متجاورين */
+    flex-direction: row; /* **المفتاح:** يرتب العناصر في صف واحد */
+    align-items: flex-start; /* **المفتاح:** لمحاذاة الصورة والنص في الأعلى */
+    text-align: right; /* محاذاة النص داخل البطاقة لليمين */
+    padding: 5px;
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    min-width: 280px; /* العرض الأدنى للبطاقة */
+    flex-shrink: 0;
+}
+
+.persons-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.person-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 20px; /* **المفتاح:** هامش على يسار الصورة لدفع النص لليمين */
+    flex-shrink: 0; /* يمنع الصورة من الانكماش */
+    border: 4px solid #007bff;
+    box-shadow: 0 0 0 6px rgba(0,123,255,0.2);
+}
+
+.person-details { /* **أنماط للحاوية الجديدة للنص** */
+    display: flex;
+    flex-direction: column; /* ترتيب العناصر النصية عموديًا داخلها */
+    flex-grow: 1; /* السماح لحاوية النص بأخذ المساحة المتبقية */
+}
+
+.person-card h3 {
+    margin: 0 0 5px; /* ضبط الهوامش العلوية والسفلية */
+    color: #333;
+    font-size: 1.1em;
+}
+
+.person-title {
+    color: #007bff;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+.person-bio {
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 15px;
+    /* max-width: 400px; */ /* يمكن إزالة هذا أو تعديله حسب الحاجة */
+}
+
+.contact-info {
+    margin-top: auto; /* يدفع معلومات الاتصال إلى الأسفل إذا كانت المساحة تسمح */
+}
+
+.contact-info a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1em;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.contact-info .fas {
+    margin-left: 8px;
+}
+
+/* Footer */
+.project-footer {
+    background-color: #343a40;
+    color: #f8f9fa;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9em;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.project-footer p {
+    margin: 5px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .header-content-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+    .header-logo {
+        margin-left: 0;
+        margin-bottom: 15px;
+    }
+    .header-text {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    .project-header h1 {
+        font-size: 2em;
+    }
+    .project-header p {
+        font-size: 1em;
+    }
+    .access-map-button {
+        width: 80%;
+        max-width: 300px;
+    }
+}
+
+/* **تعديلات للواجهة المتجاوبة لبطاقة الشخص** */
+@media (max-width: 768px) {
+    .project-header {
+        padding: 15px 0;
+    }
+    .project-header h1 {
+        font-size: 1.8em;
+    }
+    .project-main-content {
+        margin: 20px auto;
+        padding: 0 15px;
+    }
+    .section {
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+    .section-title {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+    /* على الشاشات الأصغر، قد يكون من الأفضل العودة إلى الترتيب العمودي لبطاقة الشخص */
+    .person-card {
+        flex-direction: column; /* عودة إلى ترتيب عمودي */
+        align-items: center; /* توسيط العناصر */
+        text-align: center; /* توسيط النص */
+        min-width: unset; /* إزالة الحد الأدنى للعرض للسماح بالتقلص */
+        width: 100%; /* اجعل البطاقة تأخذ العرض الكامل */
+    }
+    .person-photo {
+        margin-left: 0; /* إزالة الهامش الأيسر */
+        margin-bottom: 15px; /* إضافة هامش سفلي للصورة */
+    }
+    .person-card h3 {
+        font-size: 1.4em;
+    }
+    .person-title, .person-bio, .contact-info {
+        max-width: 100%; /* السماح للنص بأخذ العرض الكامل */
+    }
+}
+
+@media (max-width: 480px) {
+    .project-header h1 {
+        font-size: 1.5em;
+    }
+    .project-header p {
+        font-size: 0.9em;
+    }
+    .person-photo {
+        width: 100px;
+        height: 100px;
+    }
+    .section {
+        padding: 20px;
+    }
+    .section-title {
+        font-size: 1.5em;
+    }
+    .person-card h3 {
+        font-size: 1.2em;
+    }
+    .person-title, .person-bio {
+        font-size: 0.85em;
+    }
+    .access-map-button {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
+}

@@ -1,73 +1,126 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>خريطة الخدمات الذكية</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <!-- Custom CSS for the project page -->
+    <link rel="stylesheet" href="project-style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <header>
-    <img src="images/جامعة قنا.jpg" alt="Logo Left" class="header-logo logo-left"> <div class="header-title">
-      <h1>خريطة الخدمات الذكية</h1>
-    </div>
-    <img src="images/القسم.png" alt="Logo Right" class="header-logo logo-right"> </header>
 
-  <div class="main-content">
-    <div id="sidebar">
-      <button id="locateBtn">📍 موقعي</button>
+    <header class="project-header">
+        <div class="header-content-wrapper">
+            <img src="images/القسم.png" alt="شعار القسم" class="header-logo">
 
-      <div id="filter-container">
-        <label for="typeFilter">اختر نوع الخدمة:</label>
-        <select id="typeFilter">
-          <option value="all">الكل</option>
-        </select>
-      </div>
-
-      <div id="map-controls">
-        <h4>التحكم بالطبقات</h4>
-        <div class="control-section">
-          <div class="control-item">
-            <input type="checkbox" id="toggleRoads" checked>
-            <label for="toggleRoads">الطرق</label>
-          </div>
-          <div class="control-item">
-            <input type="checkbox" id="toggleServicePoints" checked>
-            <label for="toggleServicePoints">نقاط الخدمة</label>
-          </div>
-          <div class="control-item">
-            <input type="checkbox" id="toggleRoute" checked>
-            <label for="toggleRoute">المسار</label>
-          </div>
-          <div class="control-item">
-            <input type="checkbox" id="toggleBorder" checked>
-            <label for="toggleBorder">الحدود</label>
-          </div>
+            <div class="header-text">
+                <h1>عنوان الرسالة</h1>
+                <p>دراسة تطبيقية في نظم المعلومات الجغرافية</p>
+            </div>
+<a href="index2.html" class="access-map-button">
+    <i class="fas fa-map"></i> زيارة منصة الخرائط
+</a>
+            <img src="images/جامعة قنا.jpg" alt="شعار جامعة قنا" class="header-logo1">
         </div>
-      </div>
+    </header>
 
-      <div id="info">جارٍ تحميل الخريطة...</div>
-    </div>
+    <main class="project-main-content">
 
-    <div id="map"></div>
-  </div>
+        <!-- Section: Researcher Info -->
+        <section class="section researcher-section">
+            <h2 class="section-title"><i class="fas fa-user-graduate"></i> الباحث</h2>
+            <div class="person-card">
+                <img src="images/صورة الباحث.jpg" alt="صورة الباحث" class="person-photo">
+                <div class="person-details"> <!-- **الحاوية الجديدة** -->
+                    <h3> وليد عادل صلاح عبدالغفار</h3>
+                    <p class="person-title">معيد بقسم الجغرافيا و نظم المعلومات الجغرافية، كلية الاداب ، جامعة جنوب الوادي بقنا</p>
+                    <p class="person-bio">
+                        
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dijkstrajs@1/dijkstra.min.js"></script>
-  <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
-  <script src="script.js"></script>
-  <div class="designer-info" onclick="togglePopup()">
-      ℹ️
-  </div>
+                    </p>
 
-  <div class="popup" id="info-popup">
-      <img src="images/cv.jpg" alt="cv">
-      <h3>Waleed Adel Salah</h3>
-      <p>Demonstrator at SVU </p>
-      <p>Waledadel983@gmail.com</p>
-  </div>
+                </div>
+            </div>
+        </section>
 
-  <div class="overlay" id="info-overlay" onclick="togglePopup()"></div>
+        <!-- Section: Supervisory Committee -->
+        <section class="section supervisory-section">
+            <h2 class="section-title"><i class="fas fa-user-shield"></i> لجنة الإشراف</h2>
+            <div class="persons-grid">
+                <!-- المشرف 1 -->
+                <div class="person-card">
+                    <img src="images/supervisor1_photo.jpg" alt="صورة المشرف الأول" class="person-photo">
+                    <div class="person-details"> <!-- **الحاوية الجديدة** -->
+                        <h3>ا.د/ [اسم المشرف الأول]</h3>
+                        <p class="person-title">[اللقب الأكاديمي والجهة]</p>
+                        <p class="person-bio">
+                            نبذة مختصرة عن المشرف الأول، .
+
+                        </p>
+                    </div>
+                </div>
+                <!-- المشرف 2 (إذا كان هناك أكثر من مشرف) -->
+                <div class="person-card">
+                    <img src="images/supervisor2_photo.jpg" alt="صورة المشرف الثاني" class="person-photo">
+                    <div class="person-details"> <!-- **الحاوية الجديدة** -->
+                        <h3>ا.د/ [اسم المشرف الثاني]</h3>
+                        <p class="person-title">[اللقب الأكاديمي والجهة]</p>
+                        <p class="person-bio">
+                            نبذة مختصرة عن المشرف الثاني، خبراته، واهتماماته البحثية.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Examination Committee -->
+        <section class="section examination-section">
+            <h2 class="section-title"><i class="fas fa-gavel"></i> لجنة الحكم والمناقشة</h2>
+            <div class="persons-grid">
+                <!-- عضو التحكيم 1 -->
+                <div class="person-card">
+                    <img src="images/examiner1_photo.jpg" alt="صورة عضو التحكيم الأول" class="person-photo">
+                    <div class="person-details"> <!-- **الحاوية الجديدة** -->
+                        <h3>ا.د/ [اسم عضو التحكيم الأول]</h3>
+                        <p class="person-title">[اللقب الأكاديمي والجهة]</p>
+                        <p class="person-bio">
+                            نبذة مختصرة عن عضو لجنة التحكيم الأول.
+                        </p>
+                    </div>
+                </div>
+                <!-- عضو التحكيم 2 -->
+                <div class="person-card">
+                    <img src="images/examiner2_photo.jpg" alt="صورة عضو التحكيم الثاني" class="person-photo">
+                    <div class="person-details"> <!-- **الحاوية الجديدة** -->
+                        <h3>ا.د/ [اسم عضو التحكيم الثاني]</h3>
+                        <p class="person-title">[اللقب الأكاديمي والجهة]</p>
+                        <p class="person-bio">
+                            نبذة مختصرة عن عضو لجنة التحكيم الثاني، .
+                        </p>
+                    </div>
+                </div>
+                <!-- عضو التحكيم 3 (إذا كان هناك) -->
+                <div class="person-card">
+                    <img src="images/examiner3_photo.jpg" alt="صورة عضو التحكيم الثالث" class="person-photo">
+                    <div class="person-details"> <!-- **الحاوية الجديدة** -->
+                        <h3>ا.د/ [اسم عضو التحكيم الثالث]</h3>
+                        <p class="person-title">[اللقب الأكاديمي والجهة]</p>
+                        <p class="person-bio">
+                            نبذة مختصرة عن عضو لجنة التحكيم الثالث.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="project-footer">
+        <p>&copy; 2025 منصة ويب لنيل درجة الماجستير. جميع الحقوق محفوظة.</p>
+        <p>جامعة جنوب الوادي - قسم نظم المعلومات الجغرافية</p>
+    </footer>
 
 </body>
 </html>

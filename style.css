@@ -54,6 +54,55 @@
     flex-grow: 1; /* السماح للنص بأخذ المساحة المتاحة */
 }
 
+/* أنماط Accordion الجديدة */
+.accordion-item {
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden; /* لضمان أن المحتوى المخفي لا يفيض */
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.accordion-header {
+    background-color: #e9ecef;
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #dee2e6; /* فاصل بين الهيدر والمحتوى */
+}
+
+.accordion-header:hover {
+    background-color: #dee2e6;
+}
+
+.accordion-header h4 {
+    margin: 0;
+    font-size: 1.1em;
+    flex-grow: 1; /* لجعل العنوان يأخذ المساحة المتاحة */
+}
+
+.toggle-icon {
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+    margin-right: 10px; /* مسافة بين النص والأيقونة */
+}
+
+.accordion-header.active .toggle-icon {
+    transform: rotate(180deg); /* تدوير السهم عند الفتح */
+}
+
+.accordion-content {
+    padding: 15px;
+    background-color: #ffffff;
+    display: none; /* إخفاء المحتوى افتراضياً */
+    border-top: none; /* إزالة الحد العلوي */
+}
+
 /* بقية أكواد CSS الخاصة بك كما هي */
 body {
   margin: 0;
@@ -137,12 +186,33 @@ header {
     background-color: #0056b3;
 }
 
+/* قم بإلغاء تعليق أو حذف أنماط #filter-container و #map-controls و #search-container القديمة
+   لأن Accordion-item و accordion-content سيتوليان التنسيق الآن. */
+/*
 #filter-container {
     margin-bottom: 20px;
     background-color: #e9ecef;
     padding: 10px;
     border-radius: 5px;
 }
+
+#map-controls {
+  background-color: #e9ecef;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+#search-container {
+    margin-bottom: 20px;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+*/
 
 #filter-container label {
     display: block;
@@ -163,13 +233,13 @@ header {
 
 #info {
     background-color: #fff;
-    padding: 15px;
+    padding: 5px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     margin-top: auto; /* يدفع صندوق المعلومات إلى الأسفل */
     text-align: right; /* محاذاة النص لليمين */
     overflow-y: auto; /* إضافة شريط تمرير إذا كان المحتوى كبيراً */
-    max-height: 250px; /* تعيين ارتفاع أقصى */
+    max-height: 400px; /* تعيين ارتفاع أقصى */
 }
 
 #info table {
@@ -190,12 +260,6 @@ header {
     font-weight: bold;
 }
 
-#map-controls {
-  background-color: #e9ecef;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
 
 #map-controls h4 {
   margin-top: 0;
@@ -281,4 +345,145 @@ header {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+
+/* أنماط الاكمال التلقائي */
+#searchInput {
+    width: calc(100% - 70px); /* Adjust width to fit button and padding */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    direction: rtl; /* دعم اللغة العربية */
+    text-align: right; /* محاذاة النص لليمين */
+}
+
+#searchBtn {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    margin-right: 10px; /* مسافة بين حقل البحث والزر */
+}
+
+#searchBtn:hover {
+    background-color: #0056b3;
+}
+
+#suggestions-container {
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    position: absolute; /* لجعلها تظهر فوق العناصر الأخرى */
+    width: calc(100% - 30px); /* نفس عرض حقل البحث تقريباً (مع الأخذ في الاعتبار الـ padding) */
+    z-index: 1001; /* تأكد أنها تظهر فوق كل شيء آخر */
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    top: auto; /* إزالة top: 100% لأنها ستكون ضمن accordion-content */
+    left: 15px; /* محاذاتها مع حقل البحث بناءً على padding الأب */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* لإضافة ظل خفيف */
+    display: none; /* إخفاؤها مبدئيًا */
+}
+
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+    text-align: right; /* محاذاة النص لليمين للغة العربية */
+    direction: rtl; /* دعم اللغة العربية */
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* --- تعديلات الهواتف المحمولة (أضف هذا القسم) --- */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed; /* أو absolute إذا كنت تفضل التمرير مع المحتوى */
+        top: 60px; /* ارتفاع الهيدر */
+        right: 0; /* محاذاة لليمين للغة العربية */
+        width: 100%;
+        height: calc(100% - 60px); /* املأ الارتفاع المتبقي */
+        transform: translateX(100%); /* إخفاء الشريط الجانبي مبدئياً خارج الشاشة */
+        transition: transform 0.3s ease-in-out;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+        z-index: 1000; /* تأكد أنها فوق الخريطة */
+        background-color: #f4f4f4; /* تأكد من وجود خلفية */
+    }
+
+    #sidebar.open {
+        transform: translateX(0); /* عرض الشريط الجانبي عند إضافة كلاس 'open' */
+    }
+
+    .main-content {
+        flex-direction: column; /* اجعل الخريطة والشريط الجانبي يتكدسان عمودياً */
+    }
+
+    #map {
+        width: 100%;
+        height: calc(100vh - 60px); /* تأخذ الارتفاع الكامل أسفل الهيدر */
+    }
+
+    #locateBtn {
+        margin-top: 10px; /* ضبط المسافات */
+        width: auto; /* السماح له بأخذ حجمه الطبيعي */
+        align-self: center; /* توسيط الزر إذا كان الشريط الجانبي flex column */
+    }
+
+    #info {
+        max-height: 200px; /* تقليل الارتفاع الأقصى على الشاشات الصغيرة */
+        margin-top: 10px;
+    }
+
+    #searchInput {
+        width: calc(100% - 50px); /* ضبط العرض ليتناسب مع الزر */
+        margin-left: 10px; /* مسافة من الزر */
+    }
+    #searchBtn {
+        margin-right: 0; /* إزالة الهامش الأيمن للموبايل */
+    }
+
+    .accordion-header {
+        padding: 8px 10px;
+        font-size: 1em;
+    }
+    .accordion-content {
+        padding: 10px;
+    }
+
+    .legend-item span {
+        font-size: 0.9em; /* خط أصغر قليلاً لنص مفتاح الخريطة */
+    }
+
+    .header-title h1 {
+        font-size: 1.5rem; /* عنوان أصغر في الهيدر */
+    }
+
+    /* زر التبديل (Hamburger Menu) */
+    .menu-toggle {
+        display: block; /* إظهار الزر على الشاشات الصغيرة */
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.8rem;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 1001; /* فوق الشريط الجانبي */
+        margin-right: 15px; /* ضبط حسب الحاجة للغة العربية */
+    }
+    .header-logo {
+        height: 50px; /* لوجو أصغر على الموبايل */
+        margin-left: 10px;
+    }
+}
+
+.menu-toggle {
+    display: none; /* إخفاء الزر افتراضياً على الشاشات الكبيرة */
 }

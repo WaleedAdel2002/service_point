@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>خريطة الخدمات الذكية</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <header>
+    <img src="images/جامعة قنا.jpg" alt="Logo Left" class="header-logo logo-left">
+    <div class="header-title">
+      <h1>خريطة الخدمات الذكية</h1>
+    </div>
+    <button class="menu-toggle" id="menuToggle">&#9776;</button>
+    <img src="images/القسم.png" alt="Logo Right" class="header-logo logo-right">
+  </header>
+
+  <div class="main-content">
+    <div id="sidebar">
+      <button id="locateBtn">📍 موقعي</button>
+
+      <div class="accordion-item">
+        <div class="accordion-header" id="searchHeader">
+          <h4>البحث عن خدمة <span class="toggle-icon">▼</span></h4>
+        </div>
+        <div class="accordion-content" id="searchContent">
+          <label for="searchInput">اسم الخدمة أو نوعها:</label>
+          <input type="text" id="searchInput" placeholder="اكتب اسم الخدمة أو نوعها..." />
+          <button id="searchBtn">بحث</button>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" id="filterHeader">
+          <h4>اختر نوع الخدمة <span class="toggle-icon">▼</span></h4>
+        </div>
+        <div class="accordion-content" id="filterContent">
+          <label for="typeFilter">اختر نوع الخدمة:</label>
+          <select id="typeFilter">
+            <option value="all">الكل</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" id="controlsHeader">
+          <h4>التحكم بالطبقات <span class="toggle-icon">▼</span></h4>
+        </div>
+        <div class="accordion-content" id="controlsContent">
+          <div class="control-section">
+            <div class="control-item">
+              <input type="checkbox" id="toggleRoads" checked>
+              <label for="toggleRoads">الطرق</label>
+            </div>
+            <div class="control-item">
+              <input type="checkbox" id="toggleServicePoints" checked>
+              <label for="toggleServicePoints">نقاط الخدمة</label>
+            </div>
+            <div class="control-item">
+              <input type="checkbox" id="toggleRoute" checked>
+              <label for="toggleRoute">المسار</label>
+            </div>
+            <div class="control-item">
+              <input type="checkbox" id="toggleBorder" checked>
+              <label for="toggleBorder">الحدود</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="info">جارٍ تحميل الخريطة...</div>
+    </div>
+
+    <div id="map"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dijkstrajs@1/dijkstra.min.js"></script>
+  <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+  <script src="script.js"></script>
+  <div class="designer-info" onclick="togglePopup()">
+      ℹ️
+  </div>
+
+  <div class="popup" id="info-popup">
+      <img src="images/cv.jpg" alt="cv">
+      <h3>Waleed Adel Salah</h3>
+      <p>Demonstrator at SVU </p>
+      <p>Waledadel983@gmail.com</p>
+  </div>
+
+  <div class="overlay" id="info-overlay" onclick="togglePopup()"></div>
+
+</body>
+</html>
